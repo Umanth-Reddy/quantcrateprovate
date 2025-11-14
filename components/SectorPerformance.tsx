@@ -6,7 +6,7 @@ import type { SectorPerformanceItem } from '../types';
 
 const SectorPerformance: React.FC = () => {
     return (
-        <GlassPane className="mt-8 p-6">
+        <GlassPane className="mt-8 p-6" interactiveGlow={true}>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Performance by Sector</h2>
             <div className="space-y-4">
                 {mockSectorPerformanceData.map((item, index) => {

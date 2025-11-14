@@ -4,6 +4,7 @@ import GlassPane from '../components/ui/GlassPane';
 
 interface HomeViewProps {
     onNavigateToDashboard: () => void;
+    onOpenAuthModal: (mode: 'signup') => void;
 }
 
 const FeatureIcon: React.FC<{ variant: 'brain' | 'chart' | 'search' }> = ({ variant }) => {
@@ -28,7 +29,7 @@ const FeatureIcon: React.FC<{ variant: 'brain' | 'chart' | 'search' }> = ({ vari
     return <div className="w-16 h-16 rounded-full bg-stone-100 dark:bg-gray-900/50 border border-stone-200 dark:border-cyan-400/20 flex items-center justify-center mb-4">{icons[variant]}</div>;
 };
 
-const HomeView: React.FC<HomeViewProps> = ({ onNavigateToDashboard }) => {
+const HomeView: React.FC<HomeViewProps> = ({ onNavigateToDashboard, onOpenAuthModal }) => {
     
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -138,7 +139,7 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigateToDashboard }) => {
                     <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
                         Stop guessing. Start making data-driven decisions. Sign up for free and unlock the power of quantitative analysis.
                     </p>
-                    <button className="bg-cyan-600 hover:bg-cyan-500 text-black font-bold py-3 px-8 rounded-lg transition-transform hover:scale-105 shadow-lg shadow-cyan-600/30">
+                    <button onClick={() => onOpenAuthModal('signup')} className="bg-cyan-600 hover:bg-cyan-500 text-black font-bold py-3 px-8 rounded-lg transition-transform hover:scale-105 shadow-lg shadow-cyan-600/30">
                         Sign Up for Free
                     </button>
                  </div>

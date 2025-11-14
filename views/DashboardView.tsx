@@ -1,16 +1,16 @@
-
 import React from 'react';
 import GlassPane from '../components/ui/GlassPane';
 import Sidebar from '../components/Sidebar';
-import { mockNewsData } from '../data/mockData';
+import { mockNewsData, mockTopGainers, mockTopLosers, mockMostVolume } from '../data/mockData';
 import type { NewsItem } from '../types';
-import MarketMoversTable from '../components/MarketMoversTable';
+import MarketMoversGrid from '../components/MarketMoversGrid';
 import SectorPerformance from '../components/SectorPerformance';
 
 interface DashboardViewProps {
     onNavigateToBasket: (basketName: string) => void;
     onNavigateToStock: (ticker: string) => void;
     onOpenNewsModal: (newsItem: NewsItem) => void;
+    onNavigateToPortfolio: (defaultTab: 'stocks' | 'baskets') => void;
 }
 
 const CuratedBasketCard: React.FC<{ title: string; description: string; stockCount: number; scanTime: string; status: 'Fresh' | 'Recent'; onSelect: () => void; }> = ({ title, description, stockCount, scanTime, status, onSelect }) => {
@@ -47,7 +47,7 @@ const CuratedBasketCard: React.FC<{ title: string; description: string; stockCou
 };
 
 const TopNews: React.FC<{newsItems: NewsItem[]; onOpenNewsModal: (newsItem: NewsItem) => void;}> = ({newsItems, onOpenNewsModal}) => (
-    <GlassPane className="mt-8 p-6">
+    <GlassPane className="mt-8 p-6" interactiveGlow={true}>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Top News (Nifty 500)</h2>
         <div className="space-y-4">
             {newsItems.map((item, index) => (
@@ -65,7 +65,7 @@ const TopNews: React.FC<{newsItems: NewsItem[]; onOpenNewsModal: (newsItem: News
 );
 
 
-const DashboardView: React.FC<DashboardViewProps> = ({ onNavigateToBasket, onNavigateToStock, onOpenNewsModal }) => {
+const DashboardView: React.FC<DashboardViewProps> = ({ onNavigateToBasket, onNavigateToStock, onOpenNewsModal, onNavigateToPortfolio }) => {
     return (
         <div className="flex flex-1">
             <div className="flex-1 overflow-y-auto h-full p-4 sm:p-6 lg:p-8 space-y-6">
@@ -82,7 +82,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigateToBasket, onNav
                          <GlassPane 
                             hover={true} 
                             onClick={() => onNavigateToBasket('Pharma Surge')} 
-                            className="p-4 flex justify-between items-center cursor-pointer dark:!shadow-green-500/20 dark:hover:!shadow-green-500/30 dark:!border-green-500/20"
+                            className="p-4 flex justify-between items-center cursor-pointer !shadow-glow-green border-green-500/20"
                          >
                             <div>
                                 <h3 className="font-semibold text-gray-900 dark:text-white">Pharma Surge</h3>
@@ -93,7 +93,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigateToBasket, onNav
                          <GlassPane 
                             hover={true} 
                             onClick={() => onNavigateToBasket('EV Ecosystem')} 
-                            className="p-4 flex justify-between items-center cursor-pointer dark:!shadow-green-500/20 dark:hover:!shadow-green-500/30 dark:!border-green-500/20"
+                            className="p-4 flex justify-between items-center cursor-pointer !shadow-glow-green border-green-500/20"
                          >
                             <div>
                                 <h3 className="font-semibold text-gray-900 dark:text-white">EV Ecosystem</h3>
@@ -104,12 +104,16 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigateToBasket, onNav
                     </div>
                 </div>
 
-                <MarketMoversTable />
+                <MarketMoversGrid 
+                    gainers={mockTopGainers}
+                    losers={mockTopLosers}
+                    volume={mockMostVolume}
+                />
                 <SectorPerformance />
                 <TopNews newsItems={mockNewsData.slice(0, 3)} onOpenNewsModal={onOpenNewsModal} />
 
             </div>
-            <Sidebar onNavigateToStock={onNavigateToStock} />
+            <Sidebar onNavigateToStock={onNavigateToStock} onNavigateToPortfolio={onNavigateToPortfolio} onNavigateToBasket={onNavigateToBasket} onOpenNewsModal={onOpenNewsModal} />
         </div>
     );
 };

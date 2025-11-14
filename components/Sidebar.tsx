@@ -1,10 +1,14 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import GlassPane from './ui/GlassPane';
 import Sparkline from './ui/Sparkline';
+import { mockWatchlistBasketsData, mockNewsData } from '../data/mockData';
+import type { NewsItem } from '../types';
 
 interface SidebarProps {
     onNavigateToStock: (ticker: string) => void;
+    onNavigateToPortfolio: (defaultTab: 'stocks' | 'baskets') => void;
+    onNavigateToBasket: (basketName: string) => void;
+    onOpenNewsModal: (newsItem: NewsItem) => void;
 }
 
 const AISignalCard: React.FC<{ onNavigateToStock: (ticker: string) => void }> = ({ onNavigateToStock }) => (
@@ -29,29 +33,78 @@ const AISignalCard: React.FC<{ onNavigateToStock: (ticker: string) => void }> = 
     </GlassPane>
 );
 
-const Watchlist: React.FC<{ onNavigateToStock: (ticker: string) => void }> = ({ onNavigateToStock }) => (
-    <GlassPane className="p-6">
-        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">My Watchlist</h3>
-        <div className="space-y-0">
-            <div onClick={() => onNavigateToStock('AAPL')} className="grid grid-cols-3 items-center p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-gray-900/50 cursor-pointer border-b border-stone-200 dark:border-cyan-400/20 pb-2 mb-2">
-                <div><span className="font-medium text-gray-900 dark:text-white font-mono">AAPL</span><span className="block text-xs text-gray-500 dark:text-gray-400">Apple Inc.</span></div>
-                <Sparkline color="green" data="M0 15L10 12L20 14L30 10L40 12L50 18L60 15L70 12L80 10L90 14L100 12" />
-                <div className="text-right">
-                    <span className="font-medium text-green-500 font-mono">+1.10%</span>
-                    <span className="block text-xs text-gray-900 dark:text-white font-mono">$180.50</span>
+const Watchlist: React.FC<{ onNavigateToStock: (ticker: string) => void; onNavigateToPortfolio: (defaultTab: 'stocks' | 'baskets') => void; onNavigateToBasket: (basketName: string) => void; }> = ({ onNavigateToStock, onNavigateToPortfolio, onNavigateToBasket }) => {
+    const [selectedView, setSelectedView] = useState<'stocks' | 'baskets'>('stocks');
+    const [isOpen, setIsOpen] = useState(false);
+
+    const views = {
+        stocks: 'Stocks',
+        baskets: 'Baskets'
+    };
+
+    const handleSelect = (view: 'stocks' | 'baskets') => {
+        setSelectedView(view);
+        setIsOpen(false);
+    };
+
+    return (
+        <GlassPane className="p-6">
+            <div className="flex justify-between items-center mb-4">
+                <button onClick={() => onNavigateToPortfolio(selectedView)} className="w-full text-left">
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors">My Watchlist &rarr;</h3>
+                </button>
+                <div className="relative">
+                    <button onClick={() => setIsOpen(!isOpen)} className="flex items-center space-x-1 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 p-2 rounded-lg bg-stone-100 dark:bg-black/30 border border-stone-200 dark:border-purple-400/20">
+                        <span>{views[selectedView]}</span>
+                         <svg className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                    </button>
+                    {isOpen && (
+                        <div className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-stone-200 dark:border-purple-400/20 z-10">
+                            <button onClick={() => handleSelect('stocks')} className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-stone-100 dark:hover:bg-gray-800">Stocks</button>
+                            <button onClick={() => handleSelect('baskets')} className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-stone-100 dark:hover:bg-gray-800">Baskets</button>
+                        </div>
+                    )}
                 </div>
             </div>
-            <div onClick={() => onNavigateToStock('TSLA')} className="grid grid-cols-3 items-center p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-gray-900/50 cursor-pointer">
-                <div><span className="font-medium text-gray-900 dark:text-white font-mono">TSLA</span><span className="block text-xs text-gray-500 dark:text-gray-400">Tesla, Inc.</span></div>
-                <Sparkline color="red" data="M0 10L10 15L20 12L30 18L40 20L50 15L60 18L70 22L80 25L90 20L100 22" />
-                <div className="text-right">
-                    <span className="font-medium text-red-500 font-mono">-0.85%</span>
-                    <span className="block text-xs text-gray-900 dark:text-white font-mono">$240.10</span>
+            
+            {selectedView === 'stocks' && (
+                 <div className="space-y-2">
+                    <div onClick={() => onNavigateToStock('AAPL')} className="grid grid-cols-3 items-center p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-gray-900/50 cursor-pointer">
+                        <div><span className="font-medium text-gray-900 dark:text-white font-mono">AAPL</span><span className="block text-xs text-gray-500 dark:text-gray-400">Apple Inc.</span></div>
+                        <Sparkline color="green" data="M0 15L10 12L20 14L30 10L40 12L50 18L60 15L70 12L80 10L90 14L100 12" />
+                        <div className="text-right">
+                            <span className="font-medium text-green-500 font-mono">+1.10%</span>
+                            <span className="block text-xs text-gray-900 dark:text-white font-mono">$180.50</span>
+                        </div>
+                    </div>
+                    <div onClick={() => onNavigateToStock('TSLA')} className="grid grid-cols-3 items-center p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-gray-900/50 cursor-pointer">
+                        <div><span className="font-medium text-gray-900 dark:text-white font-mono">TSLA</span><span className="block text-xs text-gray-500 dark:text-gray-400">Tesla, Inc.</span></div>
+                        <Sparkline color="red" data="M0 10L10 15L20 12L30 18L40 20L50 15L60 18L70 22L80 25L90 20L100 22" />
+                        <div className="text-right">
+                            <span className="font-medium text-red-500 font-mono">-0.85%</span>
+                            <span className="block text-xs text-gray-900 dark:text-white font-mono">$240.10</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </GlassPane>
-);
+            )}
+            
+            {selectedView === 'baskets' && (
+                 <div className="space-y-2">
+                    {mockWatchlistBasketsData.map(basket => (
+                         <div key={basket.name} onClick={() => onNavigateToBasket(basket.name)} className="flex justify-between items-center p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-gray-900/50 cursor-pointer">
+                            <div>
+                                <span className="font-medium text-gray-900 dark:text-white">{basket.name}</span>
+                                <span className="block text-xs text-gray-500 dark:text-gray-400 font-mono">{basket.stockCount} Stocks</span>
+                            </div>
+                            <span className={`font-medium font-mono ${basket.changePositive ? 'text-green-500' : 'text-red-500'}`}>{basket.changePercent}</span>
+                        </div>
+                    ))}
+                 </div>
+            )}
+        </GlassPane>
+    );
+}
+
 
 const UpcomingEvents: React.FC = () => (
      <GlassPane className="p-6">
@@ -81,12 +134,31 @@ const UpcomingEvents: React.FC = () => (
     </GlassPane>
 );
 
-const Sidebar: React.FC<SidebarProps> = ({ onNavigateToStock }) => {
+const MiniNews: React.FC<{onOpenNewsModal: (newsItem: NewsItem) => void;}> = ({onOpenNewsModal}) => (
+    <GlassPane className="p-6">
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Mini News</h3>
+        <div className="space-y-3">
+            {mockNewsData.slice(3, 6).map((item, index) => (
+                <div key={index} className="border-b border-stone-200 dark:border-purple-400/20 pb-3 last:border-b-0 last:pb-0">
+                     <h4 onClick={() => onOpenNewsModal(item)} className="font-medium text-gray-900 dark:text-white hover:text-cyan-600 dark:hover:text-cyan-300 cursor-pointer text-sm leading-tight">{item.title}</h4>
+                    <div className="flex text-xs text-gray-500 dark:text-gray-400 mt-1 space-x-2 font-mono">
+                        <span>{item.source}</span>
+                        <span>&bull;</span>
+                        <span>{item.time}</span>
+                    </div>
+                </div>
+            ))}
+        </div>
+    </GlassPane>
+);
+
+const Sidebar: React.FC<SidebarProps> = ({ onNavigateToStock, onNavigateToPortfolio, onNavigateToBasket, onOpenNewsModal }) => {
     return (
         <div className="w-[380px] flex-shrink-0 h-full overflow-y-auto p-6 space-y-6 border-l border-gray-200 dark:border-cyan-400/20 hidden lg:block">
             <AISignalCard onNavigateToStock={onNavigateToStock} />
-            <Watchlist onNavigateToStock={onNavigateToStock} />
+            <Watchlist onNavigateToStock={onNavigateToStock} onNavigateToPortfolio={onNavigateToPortfolio} onNavigateToBasket={onNavigateToBasket} />
             <UpcomingEvents />
+            <MiniNews onOpenNewsModal={onOpenNewsModal} />
         </div>
     );
 };

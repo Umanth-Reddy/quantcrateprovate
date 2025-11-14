@@ -8,8 +8,11 @@ import ExploreBasketsView from './views/ExploreBasketsView';
 import BasketView from './views/BasketView';
 import StockTerminalView from './views/StockTerminalView';
 import NewsView from './views/NewsView';
+import PortfolioView from './views/PortfolioView';
+import HowItWorksView from './views/HowItWorksView';
 import NewsModal from './components/NewsModal';
-import type { View, Basket, StockDetails, NewsItem } from './types';
+import AuthModal from './components/AuthModal';
+import type { View, Basket, StockDetails, NewsItem, StockNavigationSource } from './types';
 import { mockBasketData, mockWhyData } from './data/mockData';
 
 const App: React.FC = () => {
@@ -18,8 +21,10 @@ const App: React.FC = () => {
     const [selectedTicker, setSelectedTicker] = useState<string | null>(null);
     const [basketData, setBasketData] = useState<Basket | null>(null);
     const [stockDetails, setStockDetails] = useState<StockDetails | null>(null);
-    const [navigationSource, setNavigationSource] = useState<'dashboard' | 'basket'>('dashboard');
+    const [navigationSource, setNavigationSource] = useState<StockNavigationSource>('dashboard');
     const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
+    const [portfolioWatchlistTab, setPortfolioWatchlistTab] = useState<'stocks' | 'baskets'>('baskets');
+    const [authModal, setAuthModal] = useState<{isOpen: boolean; mode: 'login' | 'signup'}>({isOpen: false, mode: 'login'});
 
     useEffect(() => {
         const theme = localStorage.getItem('theme');
@@ -30,6 +35,14 @@ const App: React.FC = () => {
         }
     }, []);
 
+    const handleOpenAuthModal = useCallback((mode: 'login' | 'signup') => {
+        setAuthModal({isOpen: true, mode});
+    }, []);
+
+    const handleCloseAuthModal = useCallback(() => {
+        setAuthModal({isOpen: false, mode: 'login'});
+    }, []);
+
     const navigateToHome = useCallback(() => {
         setView('home');
         setSelectedBasketName(null);
@@ -38,6 +51,13 @@ const App: React.FC = () => {
 
     const navigateToDashboard = useCallback(() => {
         setView('dashboard');
+        setSelectedBasketName(null);
+        setSelectedTicker(null);
+    }, []);
+    
+    const navigateToPortfolio = useCallback((defaultTab: 'stocks' | 'baskets' = 'baskets') => {
+        setView('portfolio');
+        setPortfolioWatchlistTab(defaultTab);
         setSelectedBasketName(null);
         setSelectedTicker(null);
     }, []);
@@ -54,6 +74,12 @@ const App: React.FC = () => {
         setSelectedTicker(null);
     }, []);
 
+    const navigateToHowItWorks = useCallback(() => {
+        setView('how-it-works');
+        setSelectedBasketName(null);
+        setSelectedTicker(null);
+    }, []);
+
     const navigateToBasket = useCallback((basketName: string) => {
         const data = mockBasketData[basketName] || { stocks: [], alert: null };
         setSelectedBasketName(basketName);
@@ -61,7 +87,7 @@ const App: React.FC = () => {
         setView('basket');
     }, []);
 
-    const navigateToStock = useCallback((ticker: string, source: 'dashboard' | 'basket') => {
+    const navigateToStock = useCallback((ticker: string, source: StockNavigationSource) => {
         const data = mockWhyData[ticker];
         setSelectedTicker(ticker);
         setStockDetails(data);
@@ -72,10 +98,13 @@ const App: React.FC = () => {
     const handleBackFromTerminal = useCallback(() => {
         if (navigationSource === 'basket' && selectedBasketName) {
             navigateToBasket(selectedBasketName);
-        } else {
+        } else if (navigationSource === 'portfolio') {
+            navigateToPortfolio();
+        }
+        else {
             navigateToDashboard();
         }
-    }, [navigationSource, selectedBasketName, navigateToBasket, navigateToDashboard]);
+    }, [navigationSource, selectedBasketName, navigateToBasket, navigateToDashboard, navigateToPortfolio]);
     
     const openNewsModal = useCallback((newsItem: NewsItem) => {
         setSelectedNews(newsItem);
@@ -88,13 +117,17 @@ const App: React.FC = () => {
     const renderView = () => {
         switch (view) {
             case 'home':
-                return <HomeView onNavigateToDashboard={navigateToDashboard} />;
+                return <HomeView onNavigateToDashboard={navigateToDashboard} onOpenAuthModal={handleOpenAuthModal} />;
             case 'dashboard':
-                return <DashboardView onNavigateToBasket={navigateToBasket} onNavigateToStock={(ticker) => navigateToStock(ticker, 'dashboard')} onOpenNewsModal={openNewsModal} />;
+                return <DashboardView onNavigateToBasket={navigateToBasket} onNavigateToStock={(ticker) => navigateToStock(ticker, 'dashboard')} onOpenNewsModal={openNewsModal} onNavigateToPortfolio={navigateToPortfolio} />;
             case 'explore':
                 return <ExploreBasketsView />;
             case 'news':
                 return <NewsView onOpenNewsModal={openNewsModal} />;
+            case 'portfolio':
+                return <PortfolioView onNavigateToBasket={navigateToBasket} onNavigateToStock={(ticker) => navigateToStock(ticker, 'portfolio')} defaultTab={portfolioWatchlistTab} />;
+            case 'how-it-works':
+                return <HowItWorksView />;
             case 'basket':
                 return basketData && selectedBasketName ? (
                     <BasketView
@@ -111,17 +144,17 @@ const App: React.FC = () => {
                         details={stockDetails}
                         onBack={handleBackFromTerminal}
                         onNavigateToBasket={navigateToBasket}
-                        onNavigateToStock={(ticker) => navigateToStock(ticker, 'basket')}
+                        onNavigateToStock={(ticker) => navigateToStock(ticker, navigationSource)}
                     />
                 ) : null;
             default:
-                return <HomeView onNavigateToDashboard={navigateToDashboard} />;
+                return <HomeView onNavigateToDashboard={navigateToDashboard} onOpenAuthModal={handleOpenAuthModal} />;
         }
     };
 
     return (
         <div className="flex flex-col h-screen w-screen font-sans">
-            <Header currentView={view} onNavigateToHome={navigateToHome} onNavigateToDashboard={navigateToDashboard} onNavigateToExplore={navigateToExplore} onNavigateToNews={navigateToNews} />
+            <Header currentView={view} onNavigateToHome={navigateToHome} onNavigateToDashboard={navigateToDashboard} onNavigateToExplore={navigateToExplore} onNavigateToNews={navigateToNews} onNavigateToPortfolio={navigateToPortfolio} onNavigateToHowItWorks={navigateToHowItWorks} onOpenAuthModal={handleOpenAuthModal} />
             {view !== 'home' && <MarketTicker />}
             <main className="flex flex-1 overflow-hidden">
                 {renderView()}
@@ -129,6 +162,11 @@ const App: React.FC = () => {
             {selectedNews && (
                 <NewsModal newsItem={selectedNews} onClose={closeNewsModal} />
             )}
+             <AuthModal 
+                isOpen={authModal.isOpen} 
+                onClose={handleCloseAuthModal} 
+                initialMode={authModal.mode} 
+            />
         </div>
     );
 };

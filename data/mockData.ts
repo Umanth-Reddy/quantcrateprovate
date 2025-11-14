@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Basket, StockDetails, NewsItem, MarketMoverItem, SectorPerformanceItem } from '../types';
+import type { Basket, StockDetails, NewsItem, MarketMoverItem, SectorPerformanceItem, WatchlistBasket, PortfolioBasket } from '../types';
 
 // FIX: Moved SectorIcons from components/SectorPerformance.tsx to break a circular dependency.
 // FIX: Converted JSX to React.createElement to support .ts file extension.
@@ -299,65 +299,40 @@ export const mockNewsData: NewsItem[] = [
         ticker: "HDFCBANK",
         url: "https://www.reuters.com/",
         description: "India's largest private sector lender, HDFC Bank, has successfully raised $750 million from an overseas bond sale. The issue was oversubscribed multiple times, indicating strong investor confidence. The funds will be used for general corporate purposes and to support the bank's offshore growth."
+    },
+    {
+        title: "Pharma sector sees renewed interest on strong Q2 results",
+        source: "BloombergQuint",
+        time: "2d ago",
+        ticker: "PFE",
+        url: "https://www.bloombergquint.com/",
+        description: "Pharmaceutical stocks are back in focus after a series of strong quarterly earnings announcements. Companies like Pfizer and Eli Lilly have reported better-than-expected results, driven by strong sales of their blockbuster drugs and a robust pipeline of new products. Analysts are optimistic about the sector's growth prospects in the coming months."
     }
 ];
 
-export const mockMarketMoversData: MarketMoverItem[] = [
-    {
-        logo: "https://companieslogo.com/img/orig/BAJHL.NS-a72a445d.png?t=1633591039",
-        company: "Bajaj Hold & Invest",
-        price: "₹12,560.00",
-        change: "579.00",
-        changePercent: "4.83%",
-        changePositive: true,
-        volume: "1,35,441",
-        sparkline: "M0 25L10 20L20 22L30 15L40 18L50 12L60 8L70 14L80 10L90 5L100 8",
-    },
-    {
-        logo: "https://companieslogo.com/img/orig/ADANIENT.NS-0c698b53.png?t=1648275323",
-        company: "Adani Enterprises",
-        price: "₹2,537.60",
-        change: "49.40",
-        changePercent: "1.99%",
-        changePositive: true,
-        volume: "29,87,450",
-        sparkline: "M0 15L10 18L20 12L30 15L40 20L50 25L60 22L70 18L80 20L90 15L100 18",
-    },
-    {
-        logo: "https://companieslogo.com/img/orig/CANBK.NS-628d4993.png?t=1633592652",
-        company: "Canara Bank",
-        price: "₹145.48",
-        change: "2.03",
-        changePercent: "1.42%",
-        changePositive: true,
-        volume: "1,78,97,359",
-        sparkline: "M0 20L10 18L20 22L30 19L40 15L50 16L60 10L70 12L80 8L90 10L100 5",
-    },
-    {
-        logo: "https://companieslogo.com/img/orig/VBL.NS-5942d919.png?t=1654238192",
-        company: "Varun Beverages",
-        price: "₹459.25",
-        change: "6.25",
-        changePercent: "1.38%",
-        changePositive: true,
-        volume: "34,27,380",
-        sparkline: "M0 22L10 18L20 20L30 17L40 14L50 16L60 12L70 15L80 11L90 13L100 8",
-    },
-    {
-        logo: "https://companieslogo.com/img/orig/ADANIPOWER.NS-7223969a.png?t=1633590740",
-        company: "Adani Power",
-        price: "₹153.77",
-        change: "-1.92",
-        changePercent: "1.26%",
-        changePositive: false,
-        volume: "2,24,92,529",
-        sparkline: "M0 5L10 8L20 12L30 10L40 15L50 18L60 14L70 18L80 22L90 20L100 25",
-    },
+export const mockTopGainers: MarketMoverItem[] = [
+    { ticker: 'NVDA', logo: 'https://companieslogo.com/img/orig/NVDA.D-8519de8d.png?t=1633499182', company: 'NVIDIA Corp', price: '$450.00', change: '+10.50', changePercent: '+2.39%', changePositive: true, volume: '45.2M' },
+    { ticker: 'JPM', logo: 'https://companieslogo.com/img/orig/JPM-92262184.png?t=1633502229', company: 'JPMorgan Chase', price: '$151.00', change: '+2.50', changePercent: '+1.68%', changePositive: true, volume: '12.8M' },
+    { ticker: 'LLY', logo: 'https://companieslogo.com/img/orig/LLY-59b9409b.png?t=1633502691', company: 'Eli Lilly', price: '$580.00', change: '+10.00', changePercent: '+1.75%', changePositive: true, volume: '3.1M' },
+    { ticker: 'AAPL', logo: 'https://companieslogo.com/img/orig/AAPL.D-15494200.png?t=1633496924', company: 'Apple Inc.', price: '$180.50', change: '+1.98', changePercent: '+1.10%', changePositive: true, volume: '55.6M' },
+];
+
+export const mockTopLosers: MarketMoverItem[] = [
+    { ticker: 'TSLA', logo: 'https://companieslogo.com/img/orig/TSLA-24e29969.png?t=1633499423', company: 'Tesla, Inc.', price: '$240.10', change: '-2.05', changePercent: '-0.85%', changePositive: false, volume: '110.5M' },
+    { ticker: 'PFE', logo: 'https://companieslogo.com/img/orig/PFE-219a16cb.png?t=1633503521', company: 'Pfizer Inc.', price: '$32.50', change: '-0.15', changePercent: '-0.46%', changePositive: false, volume: '35.7M' },
+    { ticker: 'NKE', logo: 'https://companieslogo.com/img/orig/NKE-0c8addb1.png?t=1633503198', company: 'NIKE, Inc.', price: '$102.50', change: '-1.50', changePercent: '-1.44%', changePositive: false, volume: '8.9M' },
+    { ticker: 'DIS', logo: 'https://companieslogo.com/img/orig/DIS-22255792.png?t=1633499933', company: 'Walt Disney', price: '$85.20', change: '-0.95', changePercent: '-1.10%', changePositive: false, volume: '15.2M' },
+];
+
+export const mockMostVolume: MarketMoverItem[] = [
+    { ticker: 'TSLA', logo: 'https://companieslogo.com/img/orig/TSLA-24e29969.png?t=1633499423', company: 'Tesla, Inc.', price: '$240.10', change: '-2.05', changePercent: '-0.85%', changePositive: false, volume: '110.5M' },
+    { ticker: 'AAPL', logo: 'https://companieslogo.com/img/orig/AAPL.D-15494200.png?t=1633496924', company: 'Apple Inc.', price: '$180.50', change: '+1.98', changePercent: '+1.10%', changePositive: true, volume: '55.6M' },
+    { ticker: 'NVDA', logo: 'https://companieslogo.com/img/orig/NVDA.D-8519de8d.png?t=1633499182', company: 'NVIDIA Corp', price: '$450.00', change: '+10.50', changePercent: '+2.39%', changePositive: true, volume: '45.2M' },
+    { ticker: 'AMZN', logo: 'https://companieslogo.com/img/orig/AMZN.D-15104436.png?t=1633497042', company: 'Amazon.com', price: '$135.50', change: '+0.80', changePercent: '+0.59%', changePositive: true, volume: '42.1M' },
 ];
 
 export const mockSectorPerformanceData: SectorPerformanceItem[] = [
     {
-        // FIX: Changed JSX component to function call to avoid JSX parsing error in .ts file.
         icon: SectorIcons.Restaurant(),
         sector: "Quick Service Restaurant",
         gainers: 2,
@@ -366,7 +341,6 @@ export const mockSectorPerformanceData: SectorPerformanceItem[] = [
         changePositive: true,
     },
     {
-        // FIX: Changed JSX component to function call to avoid JSX parsing error in .ts file.
         icon: SectorIcons.Printing(),
         sector: "Printing & Stationery",
         gainers: 8,
@@ -375,7 +349,6 @@ export const mockSectorPerformanceData: SectorPerformanceItem[] = [
         changePositive: true,
     },
     {
-        // FIX: Changed JSX component to function call to avoid JSX parsing error in .ts file.
         icon: SectorIcons.Shipbuilding(),
         sector: "Shipbuilding",
         gainers: 2,
@@ -384,7 +357,6 @@ export const mockSectorPerformanceData: SectorPerformanceItem[] = [
         changePositive: true,
     },
     {
-        // FIX: Changed JSX component to function call to avoid JSX parsing error in .ts file.
         icon: SectorIcons.Metals(),
         sector: "Non-Ferrous Metals",
         gainers: 24,
@@ -393,7 +365,6 @@ export const mockSectorPerformanceData: SectorPerformanceItem[] = [
         changePositive: false,
     },
     {
-        // FIX: Changed JSX component to function call to avoid JSX parsing error in .ts file.
         icon: SectorIcons.EdibleOil(),
         sector: "Edible Oil",
         gainers: 12,
@@ -402,7 +373,6 @@ export const mockSectorPerformanceData: SectorPerformanceItem[] = [
         changePositive: false,
     },
     {
-        // FIX: Changed JSX component to function call to avoid JSX parsing error in .ts file.
         icon: SectorIcons.DryCells(),
         sector: "Dry cells",
         gainers: 0,
@@ -410,4 +380,16 @@ export const mockSectorPerformanceData: SectorPerformanceItem[] = [
         priceChange: "-2.89%",
         changePositive: false,
     },
+];
+
+
+export const mockWatchlistBasketsData: WatchlistBasket[] = [
+    { name: 'Pharma Surge', stockCount: 4, changePercent: '+5.2%', changePositive: true },
+    { name: 'EV Ecosystem', stockCount: 6, changePercent: '+3.1%', changePositive: true },
+    { name: 'Mean Reversion', stockCount: 7, changePercent: '-1.8%', changePositive: false },
+];
+
+export const mockInvestedBasketsData: PortfolioBasket[] = [
+    { name: 'Tech Momentum', investedValue: '₹50,000', currentValue: '₹54,250', totalReturn: '+₹4,250', totalReturnPercent: '+8.50%', isPositive: true },
+    { name: 'Banking Breakouts', investedValue: '₹1,20,000', currentValue: '₹1,15,800', totalReturn: '-₹4,200', totalReturnPercent: '-3.50%', isPositive: false },
 ];

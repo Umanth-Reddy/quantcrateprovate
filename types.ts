@@ -1,7 +1,7 @@
-
 import type { ReactElement } from 'react';
 
-export type View = 'home' | 'dashboard' | 'explore' | 'basket' | 'stock-terminal' | 'news';
+export type View = 'home' | 'dashboard' | 'explore' | 'basket' | 'stock-terminal' | 'news' | 'portfolio' | 'how-it-works';
+export type StockNavigationSource = 'dashboard' | 'basket' | 'portfolio';
 
 export interface Stock {
     ticker: string;
@@ -59,6 +59,7 @@ export interface NewsItem {
 }
 
 export interface MarketMoverItem {
+    ticker: string;
     logo: string;
     company: string;
     price: string;
@@ -66,7 +67,22 @@ export interface MarketMoverItem {
     changePercent: string;
     changePositive: boolean;
     volume: string;
-    sparkline: string;
+}
+
+export interface WatchlistBasket {
+    name: string;
+    stockCount: number;
+    changePercent: string;
+    changePositive: boolean;
+}
+
+export interface PortfolioBasket {
+    name: string;
+    investedValue: string;
+    currentValue: string;
+    totalReturn: string;
+    totalReturnPercent: string;
+    isPositive: boolean;
 }
 
 export interface SectorPerformanceItem {

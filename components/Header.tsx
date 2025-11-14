@@ -8,6 +8,9 @@ interface HeaderProps {
     onNavigateToDashboard: () => void;
     onNavigateToExplore: () => void;
     onNavigateToNews: () => void;
+    onNavigateToPortfolio: () => void;
+    onNavigateToHowItWorks: () => void;
+    onOpenAuthModal: (mode: 'login' | 'signup') => void;
 }
 
 const ThemeToggle: React.FC = () => {
@@ -32,7 +35,7 @@ const ThemeToggle: React.FC = () => {
     return (
         <button onClick={toggleTheme} className="text-gray-300 hover:text-cyan-300 p-2 rounded-full hover:bg-gray-900/50 transition-colors">
             {isDark ? (
-                <svg className="h-6 w-6" xmlns="http://www.w.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-6.364-.386l1.591-1.591M3 12H.75m.386-6.364l1.591 1.591M12 12a2.25 2.25 0 00-2.25 2.25 2.25 2.25 0 002.25 2.25 2.25 2.25 0 002.25-2.25A2.25 2.25 0 0012 12z" />
                 </svg>
             ) : (
@@ -44,7 +47,7 @@ const ThemeToggle: React.FC = () => {
     );
 };
 
-const Header: React.FC<HeaderProps> = ({ currentView, onNavigateToHome, onNavigateToDashboard, onNavigateToExplore, onNavigateToNews }) => {
+const Header: React.FC<HeaderProps> = ({ currentView, onNavigateToHome, onNavigateToDashboard, onNavigateToExplore, onNavigateToNews, onNavigateToPortfolio, onNavigateToHowItWorks, onOpenAuthModal }) => {
     const navLinkClasses = "text-gray-300 hover:bg-gray-900/50 hover:text-cyan-300 px-3 py-2 rounded-md text-sm font-medium";
     const activeNavLinkClasses = "bg-cyan-600/30 text-cyan-100 border border-cyan-500/50 px-3 py-2 rounded-md text-sm font-medium";
     
@@ -69,6 +72,12 @@ const Header: React.FC<HeaderProps> = ({ currentView, onNavigateToHome, onNaviga
                              <button onClick={onNavigateToNews} className={currentView === 'news' ? activeNavLinkClasses : navLinkClasses}>
                                 News
                             </button>
+                            <button onClick={() => onNavigateToPortfolio()} className={currentView === 'portfolio' ? activeNavLinkClasses : navLinkClasses}>
+                                My Portfolio
+                            </button>
+                            <button onClick={onNavigateToHowItWorks} className={currentView === 'how-it-works' ? activeNavLinkClasses : navLinkClasses}>
+                                How It Works
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -84,10 +93,10 @@ const Header: React.FC<HeaderProps> = ({ currentView, onNavigateToHome, onNaviga
                             <div className="w-px h-6 bg-gray-700"></div>
                         </>
                     )}
-                    <button className="text-sm font-medium text-gray-300 hover:text-cyan-300 transition-colors px-4 py-2">
+                    <button onClick={() => onOpenAuthModal('login')} className="text-sm font-medium text-gray-300 hover:text-cyan-300 transition-colors px-4 py-2">
                         Login
                     </button>
-                    <button className="text-sm font-medium bg-cyan-600 hover:bg-cyan-500 text-black px-4 py-2 rounded-md transition-colors shadow-md shadow-cyan-600/20">
+                    <button onClick={() => onOpenAuthModal('signup')} className="text-sm font-medium bg-cyan-600 hover:bg-cyan-500 text-black px-4 py-2 rounded-md transition-colors shadow-md shadow-cyan-600/20">
                         Sign Up
                     </button>
                     <ThemeToggle />
