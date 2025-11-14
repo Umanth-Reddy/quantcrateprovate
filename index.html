@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -17,6 +17,7 @@
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
                         mono: ['IBM Plex Mono', 'monospace'],
+                        lora: ['Lora', 'serif'],
                     },
                     colors: {
                         cyan: {
@@ -50,7 +51,10 @@
     </script>
     <style>
         body {
-            @apply bg-gray-50 text-gray-900;
+            /* Explicitly set the 'background' property to a solid color. */
+            /* This ensures that when switching from dark mode, the animated gradient and other background properties are completely removed, fixing the visual bug. */
+            background: #fafaf9; /* This is the hex code for Tailwind's stone-50 */
+            @apply text-gray-900;
         }
 
         .dark body {
@@ -65,12 +69,26 @@
         }
 
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { @apply bg-gray-100; }
-        ::-webkit-scrollbar-thumb { @apply bg-gray-400 rounded-lg; }
-        ::-webkit-scrollbar-thumb:hover { @apply bg-gray-500; }
+        ::-webkit-scrollbar-track { @apply bg-stone-100; }
+        ::-webkit-scrollbar-thumb { @apply bg-stone-400 rounded-lg; }
+        ::-webkit-scrollbar-thumb:hover { @apply bg-stone-500; }
         .dark ::-webkit-scrollbar-track { background-color: #080808; }
         .dark ::-webkit-scrollbar-thumb { background-color: #0e7490; }
         .dark ::-webkit-scrollbar-thumb:hover { background-color: #06b6d4; }
+
+        /* Scroll Animation Styles */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .animate-on-scroll.delay-1.is-visible { transition-delay: 0.2s; }
+        .animate-on-scroll.delay-2.is-visible { transition-delay: 0.4s; }
+        .animate-on-scroll.delay-3.is-visible { transition-delay: 0.6s; }
     </style>
 <script type="importmap">
 {

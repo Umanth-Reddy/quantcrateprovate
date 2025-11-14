@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import GlassPane from '../components/ui/GlassPane';
 import type { StockDetails, SubScore } from '../types';
@@ -50,7 +51,7 @@ const AIScoreGauge: React.FC<{ score: number, label: string, color: string }> = 
         <div className="flex justify-center items-center my-4">
             <div className="relative w-40 h-40">
                 <svg className="w-full h-full" viewBox="0 0 36 36">
-                    <path className="text-gray-200 dark:text-gray-700/50" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" strokeWidth="3" />
+                    <path className="text-stone-200 dark:text-gray-700/50" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" strokeWidth="3" />
                     <path className={`${color} transition-all duration-1000`} strokeWidth="3" strokeDasharray={strokeDash} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" strokeLinecap="round" />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center font-mono">
@@ -78,7 +79,7 @@ const SubScoreItem: React.FC<SubScore & { color: string }> = ({ name, value, exp
                 <span>{name}</span>
                 <span className="font-mono">{value} / 100</span>
             </div>
-            <div className="w-full bg-gray-200 dark:bg-gray-700/50 rounded-full h-2 overflow-hidden">
+            <div className="w-full bg-stone-200 dark:bg-gray-700/50 rounded-full h-2 overflow-hidden">
                 <div className={`${color} h-2 rounded-full transition-all duration-1000`} style={{ width: `${width}%` }}></div>
             </div>
             <button onClick={() => setExpanded(!expanded)} className="text-cyan-600 dark:text-cyan-400 text-xs font-medium mt-2 hover:text-cyan-500 dark:hover:text-cyan-300 flex items-center">
@@ -91,7 +92,7 @@ const SubScoreItem: React.FC<SubScore & { color: string }> = ({ name, value, exp
                 className="overflow-hidden transition-all duration-300 ease-in-out"
                 style={{ maxHeight: expanded ? `${explanationRef.current?.scrollHeight}px` : '0px' }}
             >
-                <div className="mt-2 p-3 bg-gray-100 dark:bg-black/50 rounded-lg text-sm text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-purple-400/20">
+                <div className="mt-2 p-3 bg-stone-100 dark:bg-black/50 rounded-lg text-sm text-gray-600 dark:text-gray-400 border border-stone-200 dark:border-purple-400/20">
                     {explanation}
                 </div>
             </div>
@@ -123,7 +124,7 @@ const StockTerminalView: React.FC<StockTerminalViewProps> = ({ ticker, details, 
                          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">In Baskets</h3>
                         <div className="flex flex-wrap gap-3">
                             {details.inBaskets.map(basketName => (
-                                <button key={basketName} onClick={() => onNavigateToBasket(basketName)} className="bg-gray-200 dark:bg-gray-700/50 text-cyan-700 dark:text-cyan-300 text-sm font-medium px-3 py-1 rounded-full hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors border border-gray-300 dark:border-purple-400/20">
+                                <button key={basketName} onClick={() => onNavigateToBasket(basketName)} className="bg-stone-200 dark:bg-gray-700/50 text-cyan-700 dark:text-cyan-300 text-sm font-medium px-3 py-1 rounded-full hover:bg-stone-300 dark:hover:bg-gray-700 transition-colors border border-stone-300 dark:border-purple-400/20">
                                     {basketName}
                                 </button>
                             ))}
@@ -149,7 +150,7 @@ const StockTerminalView: React.FC<StockTerminalViewProps> = ({ ticker, details, 
                                     ? <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
                                     : <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" /></svg>;
                                 return (
-                                    <li key={idx} className={`flex items-center text-sm ${passClass} border-b border-gray-200 dark:border-purple-400/20 last:border-b-0 pb-2 mb-2`}>
+                                    <li key={idx} className={`flex items-center text-sm ${passClass} border-b border-stone-200 dark:border-purple-400/20 last:border-b-0 pb-2 mb-2`}>
                                         {icon}
                                         <span className="flex-grow"><span className="font-medium">{item.rule}:</span> <span className="font-mono">{item.details}</span></span>
                                     </li>

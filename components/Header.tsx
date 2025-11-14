@@ -32,7 +32,7 @@ const ThemeToggle: React.FC = () => {
     return (
         <button onClick={toggleTheme} className="text-gray-300 hover:text-cyan-300 p-2 rounded-full hover:bg-gray-900/50 transition-colors">
             {isDark ? (
-                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                <svg className="h-6 w-6" xmlns="http://www.w.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-6.364-.386l1.591-1.591M3 12H.75m.386-6.364l1.591 1.591M12 12a2.25 2.25 0 00-2.25 2.25 2.25 2.25 0 002.25 2.25 2.25 2.25 0 002.25-2.25A2.25 2.25 0 0012 12z" />
                 </svg>
             ) : (
@@ -74,14 +74,17 @@ const Header: React.FC<HeaderProps> = ({ currentView, onNavigateToHome, onNaviga
                 </div>
                 <div className="flex items-center space-x-4">
                     {currentView !== 'home' && (
-                        <button onClick={() => window.location.reload()} className="flex items-center text-gray-300 hover:text-cyan-300 hover:bg-gray-900/50 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7V9a1 1 0 01-2 0V3a1 1 0 011-1zm10 10a1 1 0 011-1v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 111.885-.666A5.002 5.002 0 0014.001 13v-2a1 1 0 012 0v6a1 1 0 01-1 1h-6a1 1 0 110-2h3.899z" clipRule="evenodd" />
-                            </svg>
-                            Refresh Baskets
-                        </button>
+                        <>
+                            <button onClick={() => window.location.reload()} className="flex items-center text-gray-300 hover:text-cyan-300 hover:bg-gray-900/50 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7V9a1 1 0 01-2 0V3a1 1 0 011-1zm10 10a1 1 0 011-1v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 111.885-.666A5.002 5.002 0 0014.001 13v-2a1 1 0 012 0v6a1 1 0 01-1 1h-6a1 1 0 110-2h3.899z" clipRule="evenodd" />
+                                </svg>
+                                Refresh Baskets
+                            </button>
+                            <div className="w-px h-6 bg-gray-700"></div>
+                        </>
                     )}
-                    <button className="text-sm font-medium bg-gray-700/50 hover:bg-gray-600/50 border border-gray-500/50 px-4 py-2 rounded-md text-white transition-colors">
+                    <button className="text-sm font-medium text-gray-300 hover:text-cyan-300 transition-colors px-4 py-2">
                         Login
                     </button>
                     <button className="text-sm font-medium bg-cyan-600 hover:bg-cyan-500 text-black px-4 py-2 rounded-md transition-colors shadow-md shadow-cyan-600/20">

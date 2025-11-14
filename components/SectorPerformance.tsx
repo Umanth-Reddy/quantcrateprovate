@@ -1,3 +1,4 @@
+
 import React from 'react';
 import GlassPane from './ui/GlassPane';
 import { mockSectorPerformanceData } from '../data/mockData';
@@ -23,7 +24,7 @@ const SectorPerformance: React.FC = () => {
                             {/* Bar */}
                             <div className="col-span-5 flex items-center h-4">
                                 <span className="font-mono text-xs text-green-500 pr-2">{item.gainers}</span>
-                                <div className="flex-grow flex h-2 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
+                                <div className="flex-grow flex h-2 rounded-full overflow-hidden bg-stone-200 dark:bg-gray-700">
                                     <div className="bg-green-500" style={{ width: `${gainerWidth}%` }}></div>
                                     <div className="bg-red-500" style={{ width: `${loserWidth}%` }}></div>
                                 </div>

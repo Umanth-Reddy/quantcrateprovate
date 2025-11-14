@@ -33,7 +33,7 @@ const Watchlist: React.FC<{ onNavigateToStock: (ticker: string) => void }> = ({ 
     <GlassPane className="p-6">
         <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">My Watchlist</h3>
         <div className="space-y-0">
-            <div onClick={() => onNavigateToStock('AAPL')} className="grid grid-cols-3 items-center p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900/50 cursor-pointer border-b border-gray-200 dark:border-cyan-400/20 pb-2 mb-2">
+            <div onClick={() => onNavigateToStock('AAPL')} className="grid grid-cols-3 items-center p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-gray-900/50 cursor-pointer border-b border-stone-200 dark:border-cyan-400/20 pb-2 mb-2">
                 <div><span className="font-medium text-gray-900 dark:text-white font-mono">AAPL</span><span className="block text-xs text-gray-500 dark:text-gray-400">Apple Inc.</span></div>
                 <Sparkline color="green" data="M0 15L10 12L20 14L30 10L40 12L50 18L60 15L70 12L80 10L90 14L100 12" />
                 <div className="text-right">
@@ -41,7 +41,7 @@ const Watchlist: React.FC<{ onNavigateToStock: (ticker: string) => void }> = ({ 
                     <span className="block text-xs text-gray-900 dark:text-white font-mono">$180.50</span>
                 </div>
             </div>
-            <div onClick={() => onNavigateToStock('TSLA')} className="grid grid-cols-3 items-center p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900/50 cursor-pointer">
+            <div onClick={() => onNavigateToStock('TSLA')} className="grid grid-cols-3 items-center p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-gray-900/50 cursor-pointer">
                 <div><span className="font-medium text-gray-900 dark:text-white font-mono">TSLA</span><span className="block text-xs text-gray-500 dark:text-gray-400">Tesla, Inc.</span></div>
                 <Sparkline color="red" data="M0 10L10 15L20 12L30 18L40 20L50 15L60 18L70 22L80 25L90 20L100 22" />
                 <div className="text-right">
@@ -58,7 +58,7 @@ const UpcomingEvents: React.FC = () => (
         <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Upcoming Events</h3>
         <ul className="space-y-3">
             <li className="flex items-center space-x-3">
-                <div className="flex-shrink-0 bg-gray-100 dark:bg-gray-900/50 border border-gray-200 dark:border-cyan-400/20 rounded-lg w-10 h-10 flex flex-col items-center justify-center font-mono">
+                <div className="flex-shrink-0 bg-stone-100 dark:bg-gray-900/50 border border-stone-200 dark:border-cyan-400/20 rounded-lg w-10 h-10 flex flex-col items-center justify-center font-mono">
                     <span className="text-xs font-bold text-cyan-600 dark:text-cyan-300 uppercase">NOV</span>
                     <span className="text-lg font-bold text-gray-900 dark:text-white leading-tight">15</span>
                 </div>
@@ -68,7 +68,7 @@ const UpcomingEvents: React.FC = () => (
                 </div>
             </li>
             <li className="flex items-center space-x-3">
-                <div className="flex-shrink-0 bg-gray-100 dark:bg-gray-900/50 border border-gray-200 dark:border-cyan-400/20 rounded-lg w-10 h-10 flex flex-col items-center justify-center font-mono">
+                <div className="flex-shrink-0 bg-stone-100 dark:bg-gray-900/50 border border-stone-200 dark:border-cyan-400/20 rounded-lg w-10 h-10 flex flex-col items-center justify-center font-mono">
                     <span className="text-xs font-bold text-cyan-600 dark:text-cyan-300 uppercase">NOV</span>
                     <span className="text-lg font-bold text-gray-900 dark:text-white leading-tight">17</span>
                 </div>

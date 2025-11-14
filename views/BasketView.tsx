@@ -24,17 +24,17 @@ const BasketView: React.FC<BasketViewProps> = ({ basketName, basketData, onNavig
             </div>
 
             <GlassPane className="overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200 dark:divide-cyan-400/20">
-                    <thead className="bg-gray-50 dark:bg-black/40">
+                <table className="min-w-full divide-y divide-stone-200 dark:divide-cyan-400/20">
+                    <thead className="bg-stone-100 dark:bg-black/40">
                         <tr>
                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Ticker</th>
                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Signal Summary</th>
                             <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Action</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200 dark:divide-cyan-400/20">
+                    <tbody className="divide-y divide-stone-200 dark:divide-cyan-400/20">
                         {basketData.stocks.map(stock => (
-                            <tr key={stock.ticker} className="hover:bg-gray-50 dark:hover:bg-black/40">
+                            <tr key={stock.ticker} className="hover:bg-stone-100 dark:hover:bg-black/40">
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white font-mono">{stock.ticker}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">{stock.summary}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

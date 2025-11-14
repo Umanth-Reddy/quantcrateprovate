@@ -21,7 +21,7 @@ const CuratedBasketCard: React.FC<{ title: string; description: string; stockCou
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{title}</h3>
                 <p className="text-gray-600 dark:text-gray-400 mt-2 text-sm">{description}</p>
             </div>
-            <div className="bg-gray-50 dark:bg-black/30 p-4 flex justify-between items-center border-t border-gray-200 dark:border-purple-400/20">
+            <div className="bg-stone-100 dark:bg-black/30 p-4 flex justify-between items-center border-t border-stone-200 dark:border-purple-400/20">
                 <div className="flex items-center space-x-4">
                     <div>
                         <span className="text-xs text-gray-500 dark:text-gray-300 font-medium uppercase">Stocks</span>
@@ -51,7 +51,7 @@ const TopNews: React.FC<{newsItems: NewsItem[]; onOpenNewsModal: (newsItem: News
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Top News (Nifty 500)</h2>
         <div className="space-y-4">
             {newsItems.map((item, index) => (
-                <div key={index} className="border-b border-gray-200 dark:border-purple-400/20 pb-4 last:border-b-0 last:pb-0">
+                <div key={index} className="border-b border-stone-200 dark:border-purple-400/20 pb-4 last:border-b-0 last:pb-0">
                     <h3 onClick={() => onOpenNewsModal(item)} className="font-medium text-gray-900 dark:text-white hover:text-cyan-600 dark:hover:text-cyan-300 cursor-pointer">{item.title}</h3>
                     <div className="flex text-xs text-gray-500 dark:text-gray-400 mt-1 space-x-2 font-mono">
                         <span>{item.source}</span>
