@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantCrate - Command Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['IBM Plex Mono', 'monospace'],
+                    },
+                    colors: {
+                        cyan: {
+                            100: '#a5f3fc', 200: '#67e8f9', 300: '#22d3ee',
+                            400: '#06b6d4', 500: '#0891b2', 600: '#0e7490',
+                        }
+                    },
+                    animation: {
+                        'marquee-slow': 'marquee-slow 40s linear infinite',
+                        'aurora': 'aurora 60s linear infinite',
+                        'fade-in-up': 'fade-in-up 1s ease-out forwards',
+                    },
+                    keyframes: {
+                        'marquee-slow': {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-50%)' },
+                        },
+                        'aurora': {
+                            '0%': { 'background-position': '0% 50%' },
+                            '50%': { 'background-position': '100% 50%' },
+                            '100%': { 'background-position': '0% 50%' },
+                        },
+                        'fade-in-up': {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0px)' },
+                        }
+                    }
+                },
+            },
+        };
+    </script>
+    <style>
+        body {
+            @apply bg-gray-50 text-gray-900;
+        }
+
+        .dark body {
+            background: linear-gradient(-45deg, #000000, #0a0a0f, #000000, #0b0f1a);
+            background-size: 400% 400%;
+            animation: aurora 60s ease infinite;
+            @apply text-gray-300;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { @apply bg-gray-100; }
+        ::-webkit-scrollbar-thumb { @apply bg-gray-400 rounded-lg; }
+        ::-webkit-scrollbar-thumb:hover { @apply bg-gray-500; }
+        .dark ::-webkit-scrollbar-track { background-color: #080808; }
+        .dark ::-webkit-scrollbar-thumb { background-color: #0e7490; }
+        .dark ::-webkit-scrollbar-thumb:hover { background-color: #06b6d4; }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+  }
+}
+</script>
+</head>
+<body class="h-screen w-screen overflow-hidden">
+    <div id="root" class="h-full"></div>
+    <script type="module" src="/index.tsx"></script>
+</body>
+</html>

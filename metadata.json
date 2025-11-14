@@ -1,0 +1,5 @@
+{
+  "name": "QuantCrate",
+  "description": "An explainable, evidence-backed stock basket curation tool that provides speed and clarity to traders by scanning the market for stocks that match transparent, rule-based signals.",
+  "requestFramePermissions": []
+}
