@@ -10,9 +10,11 @@ import StockTerminalView from './views/StockTerminalView';
 import NewsView from './views/NewsView';
 import PortfolioView from './views/PortfolioView';
 import HowItWorksView from './views/HowItWorksView';
+import SubscribeView from './views/SubscribeView';
 import NewsModal from './components/NewsModal';
 import AuthModal from './components/AuthModal';
-import type { View, Basket, StockDetails, NewsItem, StockNavigationSource } from './types';
+import SubscriptionModal from './components/SubscriptionModal';
+import type { View, Basket, StockDetails, NewsItem, StockNavigationSource, User } from './types';
 import { mockBasketData, mockWhyData } from './data/mockData';
 
 const App: React.FC = () => {
@@ -25,6 +27,13 @@ const App: React.FC = () => {
     const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
     const [portfolioWatchlistTab, setPortfolioWatchlistTab] = useState<'stocks' | 'baskets'>('baskets');
     const [authModal, setAuthModal] = useState<{isOpen: boolean; mode: 'login' | 'signup'}>({isOpen: false, mode: 'login'});
+    const [currentUser, setCurrentUser] = useState<User | null>(null);
+
+    // --- Subscription State ---
+    const [isSubscribed, setIsSubscribed] = useState(false); // Default to free user
+    const [isSubscriptionModalOpen, setSubscriptionModalOpen] = useState(false);
+
+    const isProAccess = isSubscribed || currentUser?.role === 'admin';
 
     useEffect(() => {
         const theme = localStorage.getItem('theme');
@@ -33,14 +42,6 @@ const App: React.FC = () => {
         } else {
             document.documentElement.classList.remove('dark');
         }
-    }, []);
-
-    const handleOpenAuthModal = useCallback((mode: 'login' | 'signup') => {
-        setAuthModal({isOpen: true, mode});
-    }, []);
-
-    const handleCloseAuthModal = useCallback(() => {
-        setAuthModal({isOpen: false, mode: 'login'});
     }, []);
 
     const navigateToHome = useCallback(() => {
@@ -54,7 +55,42 @@ const App: React.FC = () => {
         setSelectedBasketName(null);
         setSelectedTicker(null);
     }, []);
+
+    const handleOpenAuthModal = useCallback((mode: 'login' | 'signup') => {
+        setAuthModal({isOpen: true, mode});
+    }, []);
+
+    const handleCloseAuthModal = useCallback(() => {
+        setAuthModal({isOpen: false, mode: 'login'});
+    }, []);
     
+    const handleLogin = useCallback(async (credentials: { email: string; password?: string; isGoogle?: boolean }) => {
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1500));
+    
+        if (credentials.email.toLowerCase() === 'admin' && credentials.password === 'admin') {
+             setCurrentUser({ username: 'Admin', role: 'admin' });
+        } else {
+             setCurrentUser({ username: credentials.email.split('@')[0], role: 'user' });
+        }
+        navigateToDashboard();
+    }, [navigateToDashboard]);
+    
+    const handleLogout = useCallback(() => {
+        setCurrentUser(null);
+        // In a real app, you might want to clear other user-specific state here.
+        setIsSubscribed(false); 
+        navigateToHome();
+    }, [navigateToHome]);
+
+    const handleProtectedAction = useCallback((action: () => void) => {
+        if (isProAccess) {
+            action();
+        } else {
+            setSubscriptionModalOpen(true);
+        }
+    }, [isProAccess]);
+
     const navigateToPortfolio = useCallback((defaultTab: 'stocks' | 'baskets' = 'baskets') => {
         setView('portfolio');
         setPortfolioWatchlistTab(defaultTab);
@@ -80,6 +116,13 @@ const App: React.FC = () => {
         setSelectedTicker(null);
     }, []);
 
+    const navigateToSubscribe = useCallback(() => {
+        setView('subscribe');
+        setSubscriptionModalOpen(false); // Close modal if open
+        setSelectedBasketName(null);
+        setSelectedTicker(null);
+    }, []);
+
     const navigateToBasket = useCallback((basketName: string) => {
         const data = mockBasketData[basketName] || { stocks: [], alert: null };
         setSelectedBasketName(basketName);
@@ -94,6 +137,9 @@ const App: React.FC = () => {
         setNavigationSource(source);
         setView('stock-terminal');
     }, []);
+
+    const protectedNavigateToBasket = (basketName: string) => handleProtectedAction(() => navigateToBasket(basketName));
+    const protectedNavigateToStock = (ticker: string, source: StockNavigationSource) => handleProtectedAction(() => navigateToStock(ticker, source));
 
     const handleBackFromTerminal = useCallback(() => {
         if (navigationSource === 'basket' && selectedBasketName) {
@@ -119,21 +165,23 @@ const App: React.FC = () => {
             case 'home':
                 return <HomeView onNavigateToDashboard={navigateToDashboard} onOpenAuthModal={handleOpenAuthModal} />;
             case 'dashboard':
-                return <DashboardView onNavigateToBasket={navigateToBasket} onNavigateToStock={(ticker) => navigateToStock(ticker, 'dashboard')} onOpenNewsModal={openNewsModal} onNavigateToPortfolio={navigateToPortfolio} />;
+                return <DashboardView onNavigateToBasket={protectedNavigateToBasket} onNavigateToStock={(ticker) => protectedNavigateToStock(ticker, 'dashboard')} onOpenNewsModal={openNewsModal} onNavigateToPortfolio={navigateToPortfolio} />;
             case 'explore':
                 return <ExploreBasketsView />;
             case 'news':
                 return <NewsView onOpenNewsModal={openNewsModal} />;
             case 'portfolio':
-                return <PortfolioView onNavigateToBasket={navigateToBasket} onNavigateToStock={(ticker) => navigateToStock(ticker, 'portfolio')} defaultTab={portfolioWatchlistTab} />;
+                return <PortfolioView onNavigateToBasket={protectedNavigateToBasket} onNavigateToStock={(ticker) => protectedNavigateToStock(ticker, 'portfolio')} defaultTab={portfolioWatchlistTab} />;
             case 'how-it-works':
                 return <HowItWorksView />;
+            case 'subscribe':
+                return <SubscribeView />;
             case 'basket':
                 return basketData && selectedBasketName ? (
                     <BasketView
                         basketName={selectedBasketName}
                         basketData={basketData}
-                        onNavigateToStock={(ticker) => navigateToStock(ticker, 'basket')}
+                        onNavigateToStock={(ticker) => protectedNavigateToStock(ticker, 'basket')}
                         onBack={navigateToDashboard}
                     />
                 ) : null;
@@ -143,8 +191,8 @@ const App: React.FC = () => {
                         ticker={selectedTicker}
                         details={stockDetails}
                         onBack={handleBackFromTerminal}
-                        onNavigateToBasket={navigateToBasket}
-                        onNavigateToStock={(ticker) => navigateToStock(ticker, navigationSource)}
+                        onNavigateToBasket={protectedNavigateToBasket}
+                        onNavigateToStock={(ticker) => protectedNavigateToStock(ticker, navigationSource)}
                     />
                 ) : null;
             default:
@@ -154,8 +202,8 @@ const App: React.FC = () => {
 
     return (
         <div className="flex flex-col h-screen w-screen font-sans">
-            <Header currentView={view} onNavigateToHome={navigateToHome} onNavigateToDashboard={navigateToDashboard} onNavigateToExplore={navigateToExplore} onNavigateToNews={navigateToNews} onNavigateToPortfolio={navigateToPortfolio} onNavigateToHowItWorks={navigateToHowItWorks} onOpenAuthModal={handleOpenAuthModal} />
-            {view !== 'home' && <MarketTicker />}
+            <Header currentView={view} onNavigateToHome={navigateToHome} onNavigateToDashboard={navigateToDashboard} onNavigateToExplore={navigateToExplore} onNavigateToNews={navigateToNews} onNavigateToPortfolio={navigateToPortfolio} onNavigateToHowItWorks={navigateToHowItWorks} onNavigateToSubscribe={navigateToSubscribe} onOpenAuthModal={handleOpenAuthModal} currentUser={currentUser} onLogout={handleLogout} />
+            {view !== 'home' && currentUser && <MarketTicker />}
             <main className="flex flex-1 overflow-hidden">
                 {renderView()}
             </main>
@@ -166,6 +214,12 @@ const App: React.FC = () => {
                 isOpen={authModal.isOpen} 
                 onClose={handleCloseAuthModal} 
                 initialMode={authModal.mode} 
+                onLogin={handleLogin}
+            />
+            <SubscriptionModal
+                isOpen={isSubscriptionModalOpen}
+                onClose={() => setSubscriptionModalOpen(false)}
+                onNavigateToSubscribe={navigateToSubscribe}
             />
         </div>
     );

@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react';
 
-export type View = 'home' | 'dashboard' | 'explore' | 'basket' | 'stock-terminal' | 'news' | 'portfolio' | 'how-it-works';
+export type View = 'home' | 'dashboard' | 'explore' | 'basket' | 'stock-terminal' | 'news' | 'portfolio' | 'how-it-works' | 'subscribe';
 export type StockNavigationSource = 'dashboard' | 'basket' | 'portfolio';
 
 export interface Stock {
@@ -83,6 +83,11 @@ export interface PortfolioBasket {
     totalReturn: string;
     totalReturnPercent: string;
     isPositive: boolean;
+}
+
+export interface User {
+    username: string;
+    role: 'user' | 'admin';
 }
 
 export interface SectorPerformanceItem {

@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import type { View } from '../types';
+import type { View, User } from '../types';
 
 interface HeaderProps {
     currentView: View;
@@ -10,7 +10,10 @@ interface HeaderProps {
     onNavigateToNews: () => void;
     onNavigateToPortfolio: () => void;
     onNavigateToHowItWorks: () => void;
+    onNavigateToSubscribe: () => void;
     onOpenAuthModal: (mode: 'login' | 'signup') => void;
+    currentUser: User | null;
+    onLogout: () => void;
 }
 
 const ThemeToggle: React.FC = () => {
@@ -47,7 +50,7 @@ const ThemeToggle: React.FC = () => {
     );
 };
 
-const Header: React.FC<HeaderProps> = ({ currentView, onNavigateToHome, onNavigateToDashboard, onNavigateToExplore, onNavigateToNews, onNavigateToPortfolio, onNavigateToHowItWorks, onOpenAuthModal }) => {
+const Header: React.FC<HeaderProps> = ({ currentView, onNavigateToHome, onNavigateToDashboard, onNavigateToExplore, onNavigateToNews, onNavigateToPortfolio, onNavigateToHowItWorks, onNavigateToSubscribe, onOpenAuthModal, currentUser, onLogout }) => {
     const navLinkClasses = "text-gray-300 hover:bg-gray-900/50 hover:text-cyan-300 px-3 py-2 rounded-md text-sm font-medium";
     const activeNavLinkClasses = "bg-cyan-600/30 text-cyan-100 border border-cyan-500/50 px-3 py-2 rounded-md text-sm font-medium";
     
@@ -60,45 +63,63 @@ const Header: React.FC<HeaderProps> = ({ currentView, onNavigateToHome, onNaviga
                     </button>
                     <div className="hidden md:block">
                         <div className="flex items-baseline space-x-4">
-                             <button onClick={onNavigateToHome} className={currentView === 'home' ? activeNavLinkClasses : navLinkClasses}>
-                                Home
-                            </button>
-                            <button onClick={onNavigateToDashboard} className={currentView === 'dashboard' ? activeNavLinkClasses : navLinkClasses}>
-                                Dashboard
-                            </button>
-                            <button onClick={onNavigateToExplore} className={currentView === 'explore' ? activeNavLinkClasses : navLinkClasses}>
-                                Explore Baskets
-                            </button>
-                             <button onClick={onNavigateToNews} className={currentView === 'news' ? activeNavLinkClasses : navLinkClasses}>
-                                News
-                            </button>
-                            <button onClick={() => onNavigateToPortfolio()} className={currentView === 'portfolio' ? activeNavLinkClasses : navLinkClasses}>
-                                My Portfolio
-                            </button>
-                            <button onClick={onNavigateToHowItWorks} className={currentView === 'how-it-works' ? activeNavLinkClasses : navLinkClasses}>
-                                How It Works
-                            </button>
+                            {currentUser ? (
+                                <>
+                                    <button onClick={onNavigateToDashboard} className={currentView === 'dashboard' ? activeNavLinkClasses : navLinkClasses}>
+                                        Dashboard
+                                    </button>
+                                    <button onClick={() => onNavigateToPortfolio()} className={currentView === 'portfolio' ? activeNavLinkClasses : navLinkClasses}>
+                                        My Portfolio
+                                    </button>
+                                    <button onClick={onNavigateToExplore} className={currentView === 'explore' ? activeNavLinkClasses : navLinkClasses}>
+                                        Explore Baskets
+                                    </button>
+                                    <button onClick={onNavigateToNews} className={currentView === 'news' ? activeNavLinkClasses : navLinkClasses}>
+                                        News
+                                    </button>
+                                    <button onClick={onNavigateToHowItWorks} className={currentView === 'how-it-works' ? activeNavLinkClasses : navLinkClasses}>
+                                        How It Works
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <button onClick={onNavigateToHome} className={currentView === 'home' ? activeNavLinkClasses : navLinkClasses}>
+                                        Home
+                                    </button>
+                                    <button onClick={onNavigateToHowItWorks} className={currentView === 'how-it-works' ? activeNavLinkClasses : navLinkClasses}>
+                                        How It Works
+                                    </button>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
                 <div className="flex items-center space-x-4">
-                    {currentView !== 'home' && (
-                        <>
-                            <button onClick={() => window.location.reload()} className="flex items-center text-gray-300 hover:text-cyan-300 hover:bg-gray-900/50 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7V9a1 1 0 01-2 0V3a1 1 0 011-1zm10 10a1 1 0 011-1v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 111.885-.666A5.002 5.002 0 0014.001 13v-2a1 1 0 012 0v6a1 1 0 01-1 1h-6a1 1 0 110-2h3.899z" clipRule="evenodd" />
-                                </svg>
-                                Refresh Baskets
-                            </button>
-                            <div className="w-px h-6 bg-gray-700"></div>
-                        </>
+                    {currentUser && (
+                         <button onClick={() => onNavigateToSubscribe()} className={`${currentView === 'subscribe' ? activeNavLinkClasses : navLinkClasses} bg-cyan-600/20 border border-cyan-500/30`}>
+                            Subscribe
+                        </button>
                     )}
-                    <button onClick={() => onOpenAuthModal('login')} className="text-sm font-medium text-gray-300 hover:text-cyan-300 transition-colors px-4 py-2">
-                        Login
-                    </button>
-                    <button onClick={() => onOpenAuthModal('signup')} className="text-sm font-medium bg-cyan-600 hover:bg-cyan-500 text-black px-4 py-2 rounded-md transition-colors shadow-md shadow-cyan-600/20">
-                        Sign Up
-                    </button>
+
+                    <div className="w-px h-6 bg-gray-700"></div>
+
+                    {currentUser ? (
+                         <div className="flex items-center space-x-4">
+                            <span className="text-sm font-medium text-gray-300 hidden sm:inline">Welcome, {currentUser.username}</span>
+                            <button onClick={onLogout} className="text-sm font-medium text-gray-300 hover:text-cyan-300 transition-colors px-4 py-2 hover:bg-gray-900/50 rounded-md">
+                                Logout
+                            </button>
+                         </div>
+                    ) : (
+                        <div className="flex items-center space-x-2">
+                            <button onClick={() => onOpenAuthModal('login')} className="text-sm font-medium text-gray-300 hover:text-cyan-300 transition-colors px-4 py-2">
+                                Login
+                            </button>
+                            <button onClick={() => onOpenAuthModal('signup')} className="text-sm font-medium bg-cyan-600 hover:bg-cyan-500 text-black px-4 py-2 rounded-md transition-colors shadow-md shadow-cyan-600/20">
+                                Sign Up
+                            </button>
+                        </div>
+                    )}
                     <ThemeToggle />
                 </div>
             </nav>
