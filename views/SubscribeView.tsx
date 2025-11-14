@@ -1,6 +1,10 @@
 import React from 'react';
 import GlassPane from '../components/ui/GlassPane';
 
+interface SubscribeViewProps {
+    onSubscribe: () => void;
+}
+
 const CheckIcon: React.FC<{className?: string}> = ({className}) => (
     <svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 ${className}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -19,9 +23,9 @@ const PlanFeature: React.FC<{ text: string; free: boolean; pro: boolean }> = ({ 
     </div>
 );
 
-const SubscribeView: React.FC = () => {
+const SubscribeView: React.FC<SubscribeViewProps> = ({ onSubscribe }) => {
     return (
-        <div className="flex-1 overflow-y-auto h-full p-4 sm:p-6 lg:p-8">
+        <div className="flex-1 p-4 sm:p-6 lg:p-8">
             <div className="max-w-4xl mx-auto">
                 <div className="text-center mb-12 animate-fade-in-up">
                     <h1 className="text-4xl md:text-5xl font-lora italic font-bold text-gray-900 dark:text-white mb-2">Unlock Your Full Potential</h1>
@@ -68,7 +72,7 @@ const SubscribeView: React.FC = () => {
                             </button>
                         </div>
                         <div className="w-24 text-center">
-                             <button className="w-full bg-cyan-600 hover:bg-cyan-500 text-black font-semibold py-2 px-4 rounded-lg transition-colors shadow-md shadow-cyan-600/20">
+                             <button onClick={onSubscribe} className="w-full bg-cyan-600 hover:bg-cyan-500 text-black font-semibold py-2 px-4 rounded-lg transition-colors shadow-md shadow-cyan-600/20">
                                 Subscribe Now
                             </button>
                         </div>

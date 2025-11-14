@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react';
 
-export type View = 'home' | 'dashboard' | 'explore' | 'basket' | 'stock-terminal' | 'news' | 'portfolio' | 'how-it-works' | 'subscribe';
+export type View = 'home' | 'dashboard' | 'explore' | 'basket-portfolio' | 'stock-terminal' | 'news' | 'portfolio' | 'how-it-works' | 'subscribe' | 'sectors';
 export type StockNavigationSource = 'dashboard' | 'basket' | 'portfolio';
 
 export interface Stock {
@@ -8,9 +8,25 @@ export interface Stock {
     summary: string;
 }
 
+export interface BasketStock {
+    ticker: string;
+    summary: string;
+    weight: number;
+    value: string;
+}
+
+export interface PerformanceMetrics {
+    totalReturn: string;
+    volatility: string;
+    sharpeRatio: string;
+}
+
 export interface Basket {
     alert: string | null;
-    stocks: Stock[];
+    stocks: BasketStock[];
+    summary: string;
+    aiScore: AIScore;
+    performanceMetrics: PerformanceMetrics;
 }
 
 export interface SubScore {

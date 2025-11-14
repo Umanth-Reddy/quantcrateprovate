@@ -10,6 +10,11 @@ const SectorIcons = {
     Metals: () => React.createElement('svg', { className: "w-5 h-5", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24" }, React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 1.5, d: "M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" })),
     EdibleOil: () => React.createElement('svg', { className: "w-5 h-5", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24" }, React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 1.5, d: "M19.5 12.572l-7.5 7.428-7.5-7.428m15 0A23.978 23.978 0 0012 3.75 23.978 23.978 0 004.5 12.572" })),
     DryCells: () => React.createElement('svg', { className: "w-5 h-5", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24" }, React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 1.5, d: "M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2h10a2 2 0 002-2v-1a2 2 0 012-2h1.945M7.8 14.25l.5-2.25M12 14.25l.5-2.25M16.2 14.25l.5-2.25M5 11V9a2 2 0 012-2h10a2 2 0 012 2v2" })),
+    Technology: () => React.createElement('svg', { className: "w-5 h-5", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24" }, React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 1.5, d: "M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" })),
+    Banking: () => React.createElement('svg', { className: "w-5 h-5", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24" }, React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 1.5, d: "M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h6M9 11.25h6M9 15.75h6" })),
+    Pharma: () => React.createElement('svg', { className: "w-5 h-5", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24" }, React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 1.5, d: "M12 21a9 9 0 01-9-9 9 9 0 019-9 9 9 0 019 9 9 9 0 01-9 9zM12 12a3 3 0 100-6 3 3 0 000 6zM12 12a3 3 0 100-6 3 3 0 000 6z" })),
+    Auto: () => React.createElement('svg', { className: "w-5 h-5", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24" }, React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 1.5, d: "M12 21a9 9 0 01-9-9 9 9 0 019-9 9 9 0 019 9 9 9 0 01-9 9zM12 12a3 3 0 100-6 3 3 0 000 6zM12 12a3 3 0 100-6 3 3 0 000 6z" })),
+    FMCG: () => React.createElement('svg', { className: "w-5 h-5", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24" }, React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 1.5, d: "M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" })),
 };
 
 
@@ -17,38 +22,108 @@ export const mockBasketData: { [key: string]: Basket } = {
     'Tech Momentum': {
         alert: null,
         stocks: [
-            { ticker: 'MSFT', summary: 'Price > 50 SMA, RSI 68' },
-            { ticker: 'AAPL', summary: 'MACD Crossover, Price > 50 SMA' },
-            { ticker: 'NVDA', summary: 'Strong Trend, RSI 72' },
-        ]
+            { ticker: 'MSFT', summary: 'Price > 50 SMA, RSI 68', weight: 40, value: '₹20,000' },
+            { ticker: 'AAPL', summary: 'MACD Crossover, Price > 50 SMA', weight: 35, value: '₹17,500' },
+            { ticker: 'NVDA', summary: 'Strong Trend, RSI 72', weight: 25, value: '₹12,500' },
+        ],
+        summary: "This basket scores high on Momentum and Trend factors, identifying tech stocks in strong, established uptrends. It is less focused on traditional value metrics.",
+        aiScore: {
+            score: 78, label: 'Buy', color: 'text-cyan-400', bgColor: 'bg-cyan-500',
+            subScores: [
+                { name: 'Trend', value: 90, explanation: 'The basket average shows a strong, consistent uptrend across its components, with all stocks trading above their 50-day moving averages.' },
+                { name: 'Momentum', value: 82, explanation: 'Overall momentum is high, with an average RSI of 69, indicating significant buying pressure across the selected tech stocks.' },
+                { name: 'Value', value: 35, explanation: 'This is a growth-focused basket. The average P/E is high, reflecting market expectations for future growth rather than current value.' }
+            ]
+        },
+        performanceMetrics: {
+            totalReturn: '+28.5%',
+            volatility: '22.1%',
+            sharpeRatio: '1.45'
+        }
     },
     'Banking Breakouts': {
         alert: 'JPM has an earnings call today. Expect high volatility.',
         stocks: [
-            { ticker: 'JPM', summary: 'Breakout > $150, High Volume' },
-            { ticker: 'HDFCBANK', summary: 'Price > 200 SMA' },
-        ]
+            { ticker: 'JPM', summary: 'Breakout > $150, High Volume', weight: 60, value: '₹60,000' },
+            { ticker: 'HDFCBANK', summary: 'Price > 200 SMA', weight: 40, value: '₹40,000' },
+        ],
+        summary: "Focuses on banking stocks exhibiting breakout patterns, confirmed by high volume. The score reflects strong technical signals and reasonable valuations within the sector.",
+        aiScore: {
+            score: 75, label: 'Buy', color: 'text-cyan-400', bgColor: 'bg-cyan-500',
+            subScores: [
+                { name: 'Trend', value: 85, explanation: 'Components are showing strong technical breakouts above key resistance levels, signaling the start of a potential new uptrend.' },
+                { name: 'Momentum', value: 78, explanation: 'Breakouts are supported by above-average trading volume, confirming the strength of the move.' },
+                { name: 'Value', value: 65, explanation: 'The selected banks trade at reasonable P/E ratios relative to the broader market and their historical averages.' }
+            ]
+        },
+        performanceMetrics: {
+            totalReturn: '+15.2%',
+            volatility: '18.9%',
+            sharpeRatio: '1.10'
+        }
     },
     'Mean Reversion': {
         alert: null,
         stocks: [
-            { ticker: 'PFE', summary: 'Oversold (RSI 28), Bounce Likel' },
-            { ticker: 'INTC', summary: 'Oversold (RSI 29), Price > 20 SMA' },
-        ]
+            { ticker: 'PFE', summary: 'Oversold (RSI 28), Bounce Likel', weight: 50, value: '₹15,000' },
+            { ticker: 'INTC', summary: 'Oversold (RSI 29), Price > 20 SMA', weight: 50, value: '₹15,000' },
+        ],
+        summary: "This strategy identifies fundamentally sound stocks that are technically oversold (low RSI). The AI score is lower, reflecting poor current momentum but high potential value.",
+        aiScore: {
+            score: 48, label: 'Hold', color: 'text-yellow-500', bgColor: 'bg-yellow-500',
+            subScores: [
+                { name: 'Trend', value: 25, explanation: 'The stocks are in clear downtrends, trading below key moving averages. This is a contrarian strategy.' },
+                { name: 'Momentum', value: 30, explanation: 'Momentum is negative, but the low average RSI (28.5) suggests the stocks are oversold and may be due for a short-term bounce.' },
+                { name: 'Value', value: 80, explanation: 'This basket scores very high on value. The components have low P/E ratios and attractive dividend yields.' }
+            ]
+        },
+        performanceMetrics: {
+            totalReturn: '-5.8%',
+            volatility: '25.5%',
+            sharpeRatio: '0.35'
+        }
     },
     'Pharma Surge': {
         alert: 'PFE reports earnings next week.',
         stocks: [
-            { ticker: 'PFE', summary: 'Oversold (RSI 28)' },
-            { ticker: 'LLY', summary: 'New 52-Week High' },
-        ]
+            { ticker: 'PFE', summary: 'Oversold (RSI 28)', weight: 40, value: '₹40,000' },
+            { ticker: 'LLY', summary: 'New 52-Week High', weight: 60, value: '₹60,000' },
+        ],
+        summary: "A momentum-focused basket targeting pharmaceutical stocks with strong recent performance, including new 52-week highs. High growth potential is prioritized over value.",
+        aiScore: {
+            score: 72, label: 'Buy', color: 'text-cyan-400', bgColor: 'bg-cyan-500',
+            subScores: [
+                { name: 'Trend', value: 88, explanation: 'The basket is driven by stocks in powerful uptrends, with components consistently hitting new highs.' },
+                { name: 'Momentum', value: 75, explanation: 'Strong price momentum is confirmed by high relative strength and positive indicator readings.' },
+                { name: 'Value', value: 40, explanation: 'Valuations are high, reflecting the market\'s optimism about the drug pipelines and growth prospects of these companies.' }
+            ]
+        },
+        performanceMetrics: {
+            totalReturn: '+35.1%',
+            volatility: '28.3%',
+            sharpeRatio: '1.60'
+        }
     },
     'EV Ecosystem': {
         alert: null,
         stocks: [
-            { ticker: 'TSLA', summary: 'Price > 50 SMA' },
-            { ticker: 'TATAMOTORS', summary: 'Volume Spike' },
-        ]
+            { ticker: 'TSLA', summary: 'Price > 50 SMA', weight: 55, value: '₹82,500' },
+            { ticker: 'TATAMOTORS', summary: 'Volume Spike', weight: 45, value: '₹67,500' },
+        ],
+        summary: "This basket captures key players in the Electric Vehicle space. The score is balanced, reflecting positive long-term trends but also recent market volatility and high valuations.",
+        aiScore: {
+            score: 62, label: 'Hold', color: 'text-yellow-500', bgColor: 'bg-yellow-500',
+            subScores: [
+                { name: 'Trend', value: 70, explanation: 'The long-term trend for the EV sector is positive, though individual stocks may experience short-term volatility.' },
+                { name: 'Momentum', value: 55, explanation: 'Momentum is mixed. While there is strong volume interest, price action has been choppy recently.' },
+                { name: 'Value', value: 30, explanation: 'This is a high-growth theme. Valuations are elevated as they are priced for significant future growth, not current earnings.' }
+            ]
+        },
+        performanceMetrics: {
+            totalReturn: '+42.0%',
+            volatility: '35.8%',
+            sharpeRatio: '1.30'
+        }
     }
 };
 
@@ -332,12 +407,28 @@ export const mockMostVolume: MarketMoverItem[] = [
 ];
 
 export const mockSectorPerformanceData: SectorPerformanceItem[] = [
+     {
+        icon: SectorIcons.Technology(),
+        sector: "Information Technology",
+        gainers: 45,
+        losers: 15,
+        priceChange: "+3.10%",
+        changePositive: true,
+    },
     {
         icon: SectorIcons.Restaurant(),
         sector: "Quick Service Restaurant",
         gainers: 2,
         losers: 7,
         priceChange: "+2.25%",
+        changePositive: true,
+    },
+     {
+        icon: SectorIcons.Banking(),
+        sector: "Private Banks",
+        gainers: 12,
+        losers: 3,
+        priceChange: "+2.05%",
         changePositive: true,
     },
     {
@@ -355,6 +446,30 @@ export const mockSectorPerformanceData: SectorPerformanceItem[] = [
         losers: 2,
         priceChange: "+1.82%",
         changePositive: true,
+    },
+    {
+        icon: SectorIcons.Pharma(),
+        sector: "Pharmaceuticals",
+        gainers: 30,
+        losers: 25,
+        priceChange: "+0.45%",
+        changePositive: true,
+    },
+    {
+        icon: SectorIcons.Auto(),
+        sector: "Automobiles",
+        gainers: 18,
+        losers: 22,
+        priceChange: "+0.15%",
+        changePositive: true,
+    },
+    {
+        icon: SectorIcons.FMCG(),
+        sector: "FMCG",
+        gainers: 20,
+        losers: 25,
+        priceChange: "-0.80%",
+        changePositive: false,
     },
     {
         icon: SectorIcons.Metals(),

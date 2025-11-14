@@ -55,7 +55,7 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigateToDashboard, onOpenAuthMo
     }, []);
 
     return (
-        <div className="flex-1 h-full w-full overflow-y-auto overflow-x-hidden">
+        <div className="flex-1 w-full">
             {/* Hero Section */}
             <section className="h-screen w-full flex flex-col items-center justify-center relative text-white text-center px-4">
                 <div className="absolute inset-0 bg-gradient-to-br from-black via-cyan-900/50 to-black animate-aurora z-0"></div>

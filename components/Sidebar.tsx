@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import GlassPane from './ui/GlassPane';
 import Sparkline from './ui/Sparkline';
-import { mockWatchlistBasketsData, mockNewsData } from '../data/mockData';
+import { mockWatchlistBasketsData, mockNewsData, mockWhyData } from '../data/mockData';
 import type { NewsItem } from '../types';
 
 interface SidebarProps {
@@ -9,6 +9,8 @@ interface SidebarProps {
     onNavigateToPortfolio: (defaultTab: 'stocks' | 'baskets') => void;
     onNavigateToBasket: (basketName: string) => void;
     onOpenNewsModal: (newsItem: NewsItem) => void;
+    watchlistedStocks: string[];
+    watchlistedBaskets: string[];
 }
 
 const AISignalCard: React.FC<{ onNavigateToStock: (ticker: string) => void }> = ({ onNavigateToStock }) => (
@@ -33,7 +35,13 @@ const AISignalCard: React.FC<{ onNavigateToStock: (ticker: string) => void }> = 
     </GlassPane>
 );
 
-const Watchlist: React.FC<{ onNavigateToStock: (ticker: string) => void; onNavigateToPortfolio: (defaultTab: 'stocks' | 'baskets') => void; onNavigateToBasket: (basketName: string) => void; }> = ({ onNavigateToStock, onNavigateToPortfolio, onNavigateToBasket }) => {
+const Watchlist: React.FC<{ 
+    onNavigateToStock: (ticker: string) => void; 
+    onNavigateToPortfolio: (defaultTab: 'stocks' | 'baskets') => void; 
+    onNavigateToBasket: (basketName: string) => void;
+    watchlistedStocks: string[];
+    watchlistedBaskets: string[];
+}> = ({ onNavigateToStock, onNavigateToPortfolio, onNavigateToBasket, watchlistedStocks, watchlistedBaskets }) => {
     const [selectedView, setSelectedView] = useState<'stocks' | 'baskets'>('stocks');
     const [isOpen, setIsOpen] = useState(false);
 
@@ -69,28 +77,28 @@ const Watchlist: React.FC<{ onNavigateToStock: (ticker: string) => void; onNavig
             
             {selectedView === 'stocks' && (
                  <div className="space-y-2">
-                    <div onClick={() => onNavigateToStock('AAPL')} className="grid grid-cols-3 items-center p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-gray-900/50 cursor-pointer">
-                        <div><span className="font-medium text-gray-900 dark:text-white font-mono">AAPL</span><span className="block text-xs text-gray-500 dark:text-gray-400">Apple Inc.</span></div>
-                        <Sparkline color="green" data="M0 15L10 12L20 14L30 10L40 12L50 18L60 15L70 12L80 10L90 14L100 12" />
-                        <div className="text-right">
-                            <span className="font-medium text-green-500 font-mono">+1.10%</span>
-                            <span className="block text-xs text-gray-900 dark:text-white font-mono">$180.50</span>
-                        </div>
-                    </div>
-                    <div onClick={() => onNavigateToStock('TSLA')} className="grid grid-cols-3 items-center p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-gray-900/50 cursor-pointer">
-                        <div><span className="font-medium text-gray-900 dark:text-white font-mono">TSLA</span><span className="block text-xs text-gray-500 dark:text-gray-400">Tesla, Inc.</span></div>
-                        <Sparkline color="red" data="M0 10L10 15L20 12L30 18L40 20L50 15L60 18L70 22L80 25L90 20L100 22" />
-                        <div className="text-right">
-                            <span className="font-medium text-red-500 font-mono">-0.85%</span>
-                            <span className="block text-xs text-gray-900 dark:text-white font-mono">$240.10</span>
-                        </div>
-                    </div>
+                     {watchlistedStocks.length > 0 ? watchlistedStocks.map(ticker => {
+                        const stock = mockWhyData[ticker];
+                        const isPositive = stock.change.startsWith('+');
+                        return (
+                            <div key={ticker} onClick={() => onNavigateToStock(ticker)} className="grid grid-cols-3 items-center p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-gray-900/50 cursor-pointer">
+                                <div><span className="font-medium text-gray-900 dark:text-white font-mono">{ticker}</span><span className="block text-xs text-gray-500 dark:text-gray-400">{stock.company}</span></div>
+                                <Sparkline color={isPositive ? "green" : "red"} data={isPositive ? "M0 15L10 12L20 14L30 10L40 12L50 18L60 15L70 12L80 10L90 14L100 12" : "M0 10L10 15L20 12L30 18L40 20L50 15L60 18L70 22L80 25L90 20L100 22"} />
+                                <div className="text-right">
+                                    <span className={`font-medium ${stock.changeColor} font-mono`}>{stock.change.split(' ')[1]}</span>
+                                    <span className="block text-xs text-gray-900 dark:text-white font-mono">{stock.price}</span>
+                                </div>
+                            </div>
+                        )
+                     }) : <p className="text-sm text-center text-gray-500 dark:text-gray-400 py-4">Your stock watchlist is empty.</p>}
                 </div>
             )}
             
             {selectedView === 'baskets' && (
                  <div className="space-y-2">
-                    {mockWatchlistBasketsData.map(basket => (
+                    {watchlistedBaskets.length > 0 ? watchlistedBaskets.map(basketName => {
+                        const basket = mockWatchlistBasketsData.find(b => b.name === basketName) || { name: basketName, stockCount: 0, changePercent: 'N/A', changePositive: true };
+                        return (
                          <div key={basket.name} onClick={() => onNavigateToBasket(basket.name)} className="flex justify-between items-center p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-gray-900/50 cursor-pointer">
                             <div>
                                 <span className="font-medium text-gray-900 dark:text-white">{basket.name}</span>
@@ -98,7 +106,7 @@ const Watchlist: React.FC<{ onNavigateToStock: (ticker: string) => void; onNavig
                             </div>
                             <span className={`font-medium font-mono ${basket.changePositive ? 'text-green-500' : 'text-red-500'}`}>{basket.changePercent}</span>
                         </div>
-                    ))}
+                    )}) : <p className="text-sm text-center text-gray-500 dark:text-gray-400 py-4">Your basket watchlist is empty.</p>}
                  </div>
             )}
         </GlassPane>
@@ -152,11 +160,11 @@ const MiniNews: React.FC<{onOpenNewsModal: (newsItem: NewsItem) => void;}> = ({o
     </GlassPane>
 );
 
-const Sidebar: React.FC<SidebarProps> = ({ onNavigateToStock, onNavigateToPortfolio, onNavigateToBasket, onOpenNewsModal }) => {
+const Sidebar: React.FC<SidebarProps> = ({ onNavigateToStock, onNavigateToPortfolio, onNavigateToBasket, onOpenNewsModal, watchlistedStocks, watchlistedBaskets }) => {
     return (
         <div className="w-[380px] flex-shrink-0 h-full overflow-y-auto p-6 space-y-6 border-l border-gray-200 dark:border-cyan-400/20 hidden lg:block">
             <AISignalCard onNavigateToStock={onNavigateToStock} />
-            <Watchlist onNavigateToStock={onNavigateToStock} onNavigateToPortfolio={onNavigateToPortfolio} onNavigateToBasket={onNavigateToBasket} />
+            <Watchlist onNavigateToStock={onNavigateToStock} onNavigateToPortfolio={onNavigateToPortfolio} onNavigateToBasket={onNavigateToBasket} watchlistedStocks={watchlistedStocks} watchlistedBaskets={watchlistedBaskets} />
             <UpcomingEvents />
             <MiniNews onOpenNewsModal={onOpenNewsModal} />
         </div>

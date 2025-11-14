@@ -1,28 +1,29 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import Header from './components/Header';
 import MarketTicker from './components/MarketTicker';
 import HomeView from './views/HomeView';
 import DashboardView from './views/DashboardView';
 import ExploreBasketsView from './views/ExploreBasketsView';
-import BasketView from './views/BasketView';
+import BasketPortfolioView from './views/BasketPortfolioView';
 import StockTerminalView from './views/StockTerminalView';
 import NewsView from './views/NewsView';
 import PortfolioView from './views/PortfolioView';
 import HowItWorksView from './views/HowItWorksView';
 import SubscribeView from './views/SubscribeView';
+import SectorsView from './views/SectorsView';
 import NewsModal from './components/NewsModal';
 import AuthModal from './components/AuthModal';
 import SubscriptionModal from './components/SubscriptionModal';
-import type { View, Basket, StockDetails, NewsItem, StockNavigationSource, User } from './types';
-import { mockBasketData, mockWhyData } from './data/mockData';
+import SubscriptionCodeModal from './components/SubscriptionCodeModal';
+import type { View, Basket, StockDetails, NewsItem, StockNavigationSource, User, PortfolioBasket } from './types';
+import { mockBasketData, mockWhyData, mockInvestedBasketsData } from './data/mockData';
+import { generateNewBasket, generateNewPortfolioBasket } from './utils/basketUtils';
 
 const App: React.FC = () => {
     const [view, setView] = useState<View>('home');
+    const [allBaskets, setAllBaskets] = useState<{ [key: string]: Basket }>(mockBasketData);
     const [selectedBasketName, setSelectedBasketName] = useState<string | null>(null);
     const [selectedTicker, setSelectedTicker] = useState<string | null>(null);
-    const [basketData, setBasketData] = useState<Basket | null>(null);
-    const [stockDetails, setStockDetails] = useState<StockDetails | null>(null);
     const [navigationSource, setNavigationSource] = useState<StockNavigationSource>('dashboard');
     const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
     const [portfolioWatchlistTab, setPortfolioWatchlistTab] = useState<'stocks' | 'baskets'>('baskets');
@@ -30,8 +31,66 @@ const App: React.FC = () => {
     const [currentUser, setCurrentUser] = useState<User | null>(null);
 
     // --- Subscription State ---
-    const [isSubscribed, setIsSubscribed] = useState(false); // Default to free user
+    const [isSubscribed, setIsSubscribed] = useState(false);
     const [isSubscriptionModalOpen, setSubscriptionModalOpen] = useState(false);
+    const [isSubscriptionCodeModalOpen, setSubscriptionCodeModalOpen] = useState(false);
+    
+    // --- Investment & Portfolio State ---
+    const [investments, setInvestments] = useState<PortfolioBasket[]>(mockInvestedBasketsData.filter(b => b.name === 'Banking Breakouts'));
+    const [archivedBaskets, setArchivedBaskets] = useState<PortfolioBasket[]>([]);
+
+    // --- Watchlist State ---
+    const [watchlistedStocks, setWatchlistedStocks] = useState<string[]>(['AAPL', 'TSLA']);
+    const [watchlistedBaskets, setWatchlistedBaskets] = useState<string[]>(['Pharma Surge', 'Mean Reversion']);
+
+    const handleToggleStockWatchlist = (ticker: string) => {
+        setWatchlistedStocks(prev => 
+            prev.includes(ticker) ? prev.filter(t => t !== ticker) : [...prev, ticker]
+        );
+    };
+    
+    const handleToggleBasketWatchlist = (basketName: string) => {
+        setWatchlistedBaskets(prev => 
+            prev.includes(basketName) ? prev.filter(b => b !== basketName) : [...prev, basketName]
+        );
+    };
+
+    const handleInvest = (basketName: string) => {
+        if (investments.some(b => b.name === basketName)) return; // Already invested
+        
+        // Find in archives and move back, or find in mocks and add
+        const archived = archivedBaskets.find(b => b.name === basketName);
+        if (archived) {
+            setInvestments(prev => [...prev, archived]);
+            setArchivedBaskets(prev => prev.filter(b => b.name !== basketName));
+        } else {
+             const mockInvestment = mockInvestedBasketsData.find(b => b.name === basketName);
+             if(mockInvestment) {
+                setInvestments(prev => [...prev, mockInvestment]);
+             }
+        }
+    };
+
+    const handleSell = (basketName: string) => {
+        const basketToArchive = investments.find(b => b.name === basketName);
+        if (basketToArchive) {
+            setInvestments(prev => prev.filter(b => b.name !== basketName));
+            // Ensure we don't duplicate in archives
+            if (!archivedBaskets.some(b => b.name === basketName)) {
+                 setArchivedBaskets(prev => [...prev, basketToArchive]);
+            }
+        }
+    };
+    
+    const handleSaveCustomBasket = (basketName: string, stocks: string[]) => {
+        const newBasket = generateNewBasket(basketName, stocks);
+        const newPortfolioBasket = generateNewPortfolioBasket(basketName);
+        
+        setAllBaskets(prev => ({...prev, [basketName]: newBasket}));
+        setInvestments(prev => [...prev, newPortfolioBasket]);
+        // Navigate to the newly created basket
+        navigateToBasket(basketName);
+    };
 
     const isProAccess = isSubscribed || currentUser?.role === 'admin';
 
@@ -65,7 +124,6 @@ const App: React.FC = () => {
     }, []);
     
     const handleLogin = useCallback(async (credentials: { email: string; password?: string; isGoogle?: boolean }) => {
-        // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1500));
     
         if (credentials.email.toLowerCase() === 'admin' && credentials.password === 'admin') {
@@ -78,7 +136,6 @@ const App: React.FC = () => {
     
     const handleLogout = useCallback(() => {
         setCurrentUser(null);
-        // In a real app, you might want to clear other user-specific state here.
         setIsSubscribed(false); 
         navigateToHome();
     }, [navigateToHome]);
@@ -118,22 +175,37 @@ const App: React.FC = () => {
 
     const navigateToSubscribe = useCallback(() => {
         setView('subscribe');
-        setSubscriptionModalOpen(false); // Close modal if open
+        setSubscriptionModalOpen(false);
         setSelectedBasketName(null);
         setSelectedTicker(null);
     }, []);
 
+    const handleSubscribe = useCallback(() => {
+        setSubscriptionCodeModalOpen(true);
+    }, []);
+
+    const handleVerifyCode = useCallback((code: string) => {
+        setSubscriptionCodeModalOpen(false);
+        if (code === '123456') {
+            setIsSubscribed(true);
+            alert("Subscription successful! You now have PRO access.");
+            navigateToDashboard();
+        } else {
+            alert("Invalid subscription code.");
+        }
+    }, [navigateToDashboard]);
+    
+    const navigateToSectors = useCallback(() => {
+        setView('sectors');
+    }, []);
+
     const navigateToBasket = useCallback((basketName: string) => {
-        const data = mockBasketData[basketName] || { stocks: [], alert: null };
         setSelectedBasketName(basketName);
-        setBasketData(data);
-        setView('basket');
+        setView('basket-portfolio');
     }, []);
 
     const navigateToStock = useCallback((ticker: string, source: StockNavigationSource) => {
-        const data = mockWhyData[ticker];
         setSelectedTicker(ticker);
-        setStockDetails(data);
         setNavigationSource(source);
         setView('stock-terminal');
     }, []);
@@ -161,31 +233,49 @@ const App: React.FC = () => {
     }, []);
 
     const renderView = () => {
+        const investedBasketNames = investments.map(b => b.name);
         switch (view) {
             case 'home':
                 return <HomeView onNavigateToDashboard={navigateToDashboard} onOpenAuthModal={handleOpenAuthModal} />;
             case 'dashboard':
-                return <DashboardView onNavigateToBasket={protectedNavigateToBasket} onNavigateToStock={(ticker) => protectedNavigateToStock(ticker, 'dashboard')} onOpenNewsModal={openNewsModal} onNavigateToPortfolio={navigateToPortfolio} />;
+                return <DashboardView onNavigateToBasket={protectedNavigateToBasket} onNavigateToStock={(ticker) => protectedNavigateToStock(ticker, 'dashboard')} onOpenNewsModal={openNewsModal} onNavigateToPortfolio={navigateToPortfolio} watchlistedBaskets={watchlistedBaskets} watchlistedStocks={watchlistedStocks} onNavigateToSectors={navigateToSectors} />;
             case 'explore':
-                return <ExploreBasketsView />;
+                return <ExploreBasketsView onNavigateToBasket={protectedNavigateToBasket} investedBasketNames={investedBasketNames} />;
             case 'news':
                 return <NewsView onOpenNewsModal={openNewsModal} />;
             case 'portfolio':
-                return <PortfolioView onNavigateToBasket={protectedNavigateToBasket} onNavigateToStock={(ticker) => protectedNavigateToStock(ticker, 'portfolio')} defaultTab={portfolioWatchlistTab} />;
+                return <PortfolioView 
+                    onNavigateToBasket={protectedNavigateToBasket} 
+                    onNavigateToStock={(ticker) => protectedNavigateToStock(ticker, 'portfolio')} 
+                    defaultTab={portfolioWatchlistTab} 
+                    investments={investments} 
+                    archivedBaskets={archivedBaskets}
+                    watchlistedBaskets={watchlistedBaskets} 
+                    watchlistedStocks={watchlistedStocks}
+                    onSaveCustomBasket={handleSaveCustomBasket}
+                />;
             case 'how-it-works':
                 return <HowItWorksView />;
             case 'subscribe':
-                return <SubscribeView />;
-            case 'basket':
+                return <SubscribeView onSubscribe={handleSubscribe} />;
+            case 'sectors':
+                return <SectorsView onBack={navigateToDashboard} />;
+            case 'basket-portfolio':
+                const basketData = selectedBasketName ? allBaskets[selectedBasketName] : null;
                 return basketData && selectedBasketName ? (
-                    <BasketView
+                    <BasketPortfolioView
                         basketName={selectedBasketName}
                         basketData={basketData}
-                        onNavigateToStock={(ticker) => protectedNavigateToStock(ticker, 'basket')}
                         onBack={navigateToDashboard}
+                        isInvested={investedBasketNames.includes(selectedBasketName)}
+                        onInvest={handleInvest}
+                        onSell={handleSell}
+                        isWatchlisted={watchlistedBaskets.includes(selectedBasketName)}
+                        onToggleWatchlist={handleToggleBasketWatchlist}
                     />
                 ) : null;
             case 'stock-terminal':
+                 const stockDetails = selectedTicker ? mockWhyData[selectedTicker] : null;
                 return stockDetails && selectedTicker ? (
                     <StockTerminalView
                         ticker={selectedTicker}
@@ -193,6 +283,8 @@ const App: React.FC = () => {
                         onBack={handleBackFromTerminal}
                         onNavigateToBasket={protectedNavigateToBasket}
                         onNavigateToStock={(ticker) => protectedNavigateToStock(ticker, navigationSource)}
+                        isWatchlisted={watchlistedStocks.includes(selectedTicker)}
+                        onToggleWatchlist={handleToggleStockWatchlist}
                     />
                 ) : null;
             default:
@@ -201,11 +293,13 @@ const App: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col h-screen w-screen font-sans">
+        <div className="flex flex-col min-h-screen w-screen font-sans">
             <Header currentView={view} onNavigateToHome={navigateToHome} onNavigateToDashboard={navigateToDashboard} onNavigateToExplore={navigateToExplore} onNavigateToNews={navigateToNews} onNavigateToPortfolio={navigateToPortfolio} onNavigateToHowItWorks={navigateToHowItWorks} onNavigateToSubscribe={navigateToSubscribe} onOpenAuthModal={handleOpenAuthModal} currentUser={currentUser} onLogout={handleLogout} />
             {view !== 'home' && currentUser && <MarketTicker />}
-            <main className="flex flex-1 overflow-hidden">
-                {renderView()}
+            <main className="flex flex-1">
+                <div key={view} className="flex-1 animate-main-content-fade-in w-full">
+                    {renderView()}
+                </div>
             </main>
             {selectedNews && (
                 <NewsModal newsItem={selectedNews} onClose={closeNewsModal} />
@@ -220,6 +314,11 @@ const App: React.FC = () => {
                 isOpen={isSubscriptionModalOpen}
                 onClose={() => setSubscriptionModalOpen(false)}
                 onNavigateToSubscribe={navigateToSubscribe}
+            />
+            <SubscriptionCodeModal
+                isOpen={isSubscriptionCodeModalOpen}
+                onClose={() => setSubscriptionCodeModalOpen(false)}
+                onSubmitCode={handleVerifyCode}
             />
         </div>
     );

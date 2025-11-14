@@ -11,6 +11,9 @@ interface DashboardViewProps {
     onNavigateToStock: (ticker: string) => void;
     onOpenNewsModal: (newsItem: NewsItem) => void;
     onNavigateToPortfolio: (defaultTab: 'stocks' | 'baskets') => void;
+    watchlistedBaskets: string[];
+    watchlistedStocks: string[];
+    onNavigateToSectors: () => void;
 }
 
 const CuratedBasketCard: React.FC<{ title: string; description: string; stockCount: number; scanTime: string; status: 'Fresh' | 'Recent'; onSelect: () => void; }> = ({ title, description, stockCount, scanTime, status, onSelect }) => {
@@ -65,10 +68,10 @@ const TopNews: React.FC<{newsItems: NewsItem[]; onOpenNewsModal: (newsItem: News
 );
 
 
-const DashboardView: React.FC<DashboardViewProps> = ({ onNavigateToBasket, onNavigateToStock, onOpenNewsModal, onNavigateToPortfolio }) => {
+const DashboardView: React.FC<DashboardViewProps> = ({ onNavigateToBasket, onNavigateToStock, onOpenNewsModal, onNavigateToPortfolio, watchlistedBaskets, watchlistedStocks, onNavigateToSectors }) => {
     return (
         <div className="flex flex-1">
-            <div className="flex-1 overflow-y-auto h-full p-4 sm:p-6 lg:p-8 space-y-6">
+            <div className="flex-1 p-4 sm:p-6 lg:p-8 space-y-6">
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Curated Baskets</h1>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <CuratedBasketCard title="Tech Momentum" description="Stocks in the technology sector showing strong upward price trends and positive momentum signals." stockCount={5} scanTime="12m ago" status="Fresh" onSelect={() => onNavigateToBasket('Tech Momentum')} />
@@ -109,11 +112,11 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigateToBasket, onNav
                     losers={mockTopLosers}
                     volume={mockMostVolume}
                 />
-                <SectorPerformance />
+                <SectorPerformance onNavigateToSectors={onNavigateToSectors} />
                 <TopNews newsItems={mockNewsData.slice(0, 3)} onOpenNewsModal={onOpenNewsModal} />
 
             </div>
-            <Sidebar onNavigateToStock={onNavigateToStock} onNavigateToPortfolio={onNavigateToPortfolio} onNavigateToBasket={onNavigateToBasket} onOpenNewsModal={onOpenNewsModal} />
+            <Sidebar onNavigateToStock={onNavigateToStock} onNavigateToPortfolio={onNavigateToPortfolio} onNavigateToBasket={onNavigateToBasket} onOpenNewsModal={onOpenNewsModal} watchlistedBaskets={watchlistedBaskets} watchlistedStocks={watchlistedStocks} />
         </div>
     );
 };

@@ -1,7 +1,9 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import GlassPane from '../components/ui/GlassPane';
-import type { StockDetails, SubScore } from '../types';
+import type { StockDetails } from '../types';
+import AIScoreDetails from '../components/AIScoreDetails';
+import FundamentalsTable from '../components/FundamentalsTable';
 
 interface StockTerminalViewProps {
     ticker: string;
@@ -9,106 +11,34 @@ interface StockTerminalViewProps {
     onBack: () => void;
     onNavigateToBasket: (basketName: string) => void;
     onNavigateToStock: (ticker: string) => void;
+    isWatchlisted: boolean;
+    onToggleWatchlist: (ticker: string) => void;
 }
 
-const AIScoreGauge: React.FC<{ score: number, label: string, color: string }> = ({ score, label, color }) => {
-    const [displayScore, setDisplayScore] = useState(0);
-    const [strokeDash, setStrokeDash] = useState('0, 100');
+const WatchlistButton: React.FC<{isWatchlisted: boolean; onClick: () => void}> = ({ isWatchlisted, onClick }) => (
+    <button 
+        onClick={onClick}
+        className="text-gray-400 dark:text-gray-500 hover:text-yellow-500 dark:hover:text-yellow-400 transition-all active:scale-125"
+        aria-label={isWatchlisted ? 'Remove from watchlist' : 'Add to watchlist'}
+    >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={isWatchlisted ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.5" className={`w-8 h-8 ${isWatchlisted ? 'text-yellow-500 dark:text-yellow-400' : ''}`}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+        </svg>
+    </button>
+);
 
-    useEffect(() => {
-        setDisplayScore(0);
-        setStrokeDash('0, 100');
-        
-        const strokeTimeout = setTimeout(() => setStrokeDash(`${score}, 100`), 100);
-
-        let animationFrameId: number;
-        let current = 0;
-
-        const scoreAnimation = () => {
-            const diff = score - current;
-            if (Math.abs(diff) < 0.5) {
-                setDisplayScore(score);
-                return; // End animation
-            }
-            // Smooth easing
-            current += diff * 0.1;
-            setDisplayScore(Math.round(current));
-            animationFrameId = requestAnimationFrame(scoreAnimation);
-        };
-        
-        const animTimeout = setTimeout(() => {
-            animationFrameId = requestAnimationFrame(scoreAnimation);
-        }, 200);
-        
-        return () => {
-            clearTimeout(strokeTimeout);
-            clearTimeout(animTimeout);
-            if(animationFrameId) cancelAnimationFrame(animationFrameId);
-        };
-    }, [score]);
+const StockTerminalView: React.FC<StockTerminalViewProps> = ({ ticker, details, onBack, onNavigateToBasket, onNavigateToStock, isWatchlisted, onToggleWatchlist }) => {
     
     return (
-        <div className="flex justify-center items-center my-4">
-            <div className="relative w-40 h-40">
-                <svg className="w-full h-full" viewBox="0 0 36 36">
-                    <path className="text-stone-200 dark:text-gray-700/50" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" strokeWidth="3" />
-                    <path className={`${color} transition-all duration-1000`} strokeWidth="3" strokeDasharray={strokeDash} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" strokeLinecap="round" />
-                </svg>
-                <div className="absolute inset-0 flex flex-col items-center justify-center font-mono">
-                    <span className="text-4xl font-bold text-gray-900 dark:text-white">{displayScore}</span>
-                    <span className={`text-lg font-medium ${color}`}>{label}</span>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-const SubScoreItem: React.FC<SubScore & { color: string }> = ({ name, value, explanation, color }) => {
-    const [expanded, setExpanded] = useState(false);
-    const [width, setWidth] = useState(0);
-    const explanationRef = useRef<HTMLDivElement>(null);
-    
-    useEffect(() => {
-        const timeout = setTimeout(() => setWidth(value), 100);
-        return () => clearTimeout(timeout);
-    }, [value]);
-
-    return (
-        <div>
-            <div className="flex justify-between text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">
-                <span>{name}</span>
-                <span className="font-mono">{value} / 100</span>
-            </div>
-            <div className="w-full bg-stone-200 dark:bg-gray-700/50 rounded-full h-2 overflow-hidden">
-                <div className={`${color} h-2 rounded-full transition-all duration-1000`} style={{ width: `${width}%` }}></div>
-            </div>
-            <button onClick={() => setExpanded(!expanded)} className="text-cyan-600 dark:text-cyan-400 text-xs font-medium mt-2 hover:text-cyan-500 dark:hover:text-cyan-300 flex items-center">
-                Details <span className={`inline-block transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`}>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                </span>
-            </button>
-            <div 
-                ref={explanationRef}
-                className="overflow-hidden transition-all duration-300 ease-in-out"
-                style={{ maxHeight: expanded ? `${explanationRef.current?.scrollHeight}px` : '0px' }}
-            >
-                <div className="mt-2 p-3 bg-stone-100 dark:bg-black/50 rounded-lg text-sm text-gray-600 dark:text-gray-400 border border-stone-200 dark:border-purple-400/20">
-                    {explanation}
-                </div>
-            </div>
-        </div>
-    );
-};
-
-const StockTerminalView: React.FC<StockTerminalViewProps> = ({ ticker, details, onBack, onNavigateToBasket, onNavigateToStock }) => {
-    
-    return (
-        <div className="flex-1 overflow-y-auto h-full p-4 sm:p-6 lg:p-8">
+        <div className="flex-1 p-4 sm:p-6 lg:p-8">
             <button onClick={onBack} className="text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300 text-sm font-medium mb-4">&larr; Back</button>
             <div className="flex justify-between items-center mb-4">
-                <div>
-                    <h1 className="text-4xl font-bold text-gray-900 dark:text-white font-mono">{ticker}</h1>
-                    <p className="text-lg text-gray-500 dark:text-gray-400">{details.company}</p>
+                <div className="flex items-center space-x-4">
+                    <div>
+                        <h1 className="text-4xl font-bold text-gray-900 dark:text-white font-mono">{ticker}</h1>
+                        <p className="text-lg text-gray-500 dark:text-gray-400">{details.company}</p>
+                    </div>
+                    <WatchlistButton isWatchlisted={isWatchlisted} onClick={() => onToggleWatchlist(ticker)} />
                 </div>
                 <div className="text-right font-mono">
                     <p className="text-3xl font-bold text-gray-900 dark:text-white">{details.price}</p>
@@ -130,16 +60,13 @@ const StockTerminalView: React.FC<StockTerminalViewProps> = ({ ticker, details, 
                             ))}
                         </div>
                     </GlassPane>
+                     <GlassPane className="p-6">
+                        <FundamentalsTable fundamentals={details.fundamentals} />
+                    </GlassPane>
                 </div>
                 <div className="space-y-6">
                     <GlassPane className="p-6">
-                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white">AI-Powered Score</h3>
-                        <AIScoreGauge score={details.aiScore.score} label={details.aiScore.label} color={details.aiScore.color} />
-                         <div className="space-y-4 mt-4">
-                            {details.aiScore.subScores.map(subScore => (
-                                <SubScoreItem key={subScore.name} {...subScore} color={details.aiScore.bgColor} />
-                            ))}
-                        </div>
+                        <AIScoreDetails aiScore={details.aiScore} />
                     </GlassPane>
                      <GlassPane className="p-6">
                         <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Signal Checklist</h3>

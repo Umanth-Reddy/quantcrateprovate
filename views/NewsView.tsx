@@ -10,7 +10,7 @@ interface NewsViewProps {
 
 const NewsView: React.FC<NewsViewProps> = ({ onOpenNewsModal }) => {
     return (
-        <div className="flex-1 overflow-y-auto h-full p-4 sm:p-6 lg:p-8">
+        <div className="flex-1 p-4 sm:p-6 lg:p-8">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Nifty 500 News & Events</h1>
             <div className="space-y-6">
                 {mockNewsData.map((item, index) => (

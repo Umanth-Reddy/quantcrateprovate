@@ -1,4 +1,5 @@
-import React, 'react';
+
+import React from 'react';
 import GlassPane from '../components/ui/GlassPane';
 import { useState, useRef, ReactNode } from 'react';
 
@@ -97,7 +98,7 @@ const SectionHeader: React.FC<{ title: string; icon: ReactNode }> = ({ title, ic
 
 const HowItWorksView: React.FC = () => {
     return (
-        <div className="flex-1 overflow-y-auto h-full p-4 sm:p-6 lg:p-8">
+        <div className="flex-1 p-4 sm:p-6 lg:p-8">
             <div className="max-w-4xl mx-auto">
                 <div className="text-center mb-12">
                     <h1 className="text-4xl md:text-5xl font-lora italic font-bold text-gray-900 dark:text-white mb-2">De-mystifying Your Investments</h1>

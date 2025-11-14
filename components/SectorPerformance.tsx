@@ -1,15 +1,18 @@
-
 import React from 'react';
 import GlassPane from './ui/GlassPane';
 import { mockSectorPerformanceData } from '../data/mockData';
 import type { SectorPerformanceItem } from '../types';
 
-const SectorPerformance: React.FC = () => {
+interface SectorPerformanceProps {
+    onNavigateToSectors: () => void;
+}
+
+const SectorPerformance: React.FC<SectorPerformanceProps> = ({ onNavigateToSectors }) => {
     return (
         <GlassPane className="mt-8 p-6" interactiveGlow={true}>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Performance by Sector</h2>
             <div className="space-y-4">
-                {mockSectorPerformanceData.map((item, index) => {
+                {mockSectorPerformanceData.slice(0, 6).map((item, index) => {
                     const total = item.gainers + item.losers;
                     const gainerWidth = total > 0 ? (item.gainers / total) * 100 : 0;
                     const loserWidth = total > 0 ? (item.losers / total) * 100 : 0;
@@ -39,7 +42,7 @@ const SectorPerformance: React.FC = () => {
                 })}
             </div>
              <div className="mt-4">
-                <button className="text-cyan-600 dark:text-cyan-400 hover:underline text-sm font-medium">
+                <button onClick={onNavigateToSectors} className="text-cyan-600 dark:text-cyan-400 hover:underline text-sm font-medium">
                     See all sectors &rarr;
                 </button>
             </div>
