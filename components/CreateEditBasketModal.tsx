@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
 import GlassPane from './ui/GlassPane';
 import Modal from './ui/Modal';
@@ -83,8 +82,8 @@ const CreateEditBasketModal: React.FC<CreateEditBasketModalProps> = ({ isOpen, o
     }, [searchTerm, selectedStocksWithAmounts]);
 
     const totalInvestment = useMemo(() => {
-        // Fix: Explicitly type the accumulator 'sum' as a number to resolve type inference issue.
-        return Array.from(selectedStocksWithAmounts.values()).reduce((sum: number, value) => sum + (parseFloat(value) || 0), 0);
+        // Fix: Explicitly type `value` as `string` to resolve type inference issue with `parseFloat`.
+        return Array.from(selectedStocksWithAmounts.values()).reduce((sum: number, value: string) => sum + (parseFloat(value) || 0), 0);
     }, [selectedStocksWithAmounts]);
 
     return (

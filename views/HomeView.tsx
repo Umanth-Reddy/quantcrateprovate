@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import GlassPane from '../components/ui/GlassPane';
 
@@ -61,8 +60,8 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigateToDashboard, onOpenAuthMo
                 <div className="absolute inset-0 bg-gradient-to-br from-black via-cyan-900/50 to-black animate-aurora z-0"></div>
                 <div className="absolute inset-0 bg-black/30 z-0"></div>
                 
-                <div className="z-10 animate-fade-in-up">
-                    <h1 className="text-5xl md:text-7xl font-lora italic font-bold tracking-tight mb-12 text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-cyan-300">
+                <div className="z-20 animate-fade-in-up">
+                    <h1 className="text-5xl md:text-7xl font-lora italic font-bold tracking-tight mb-10 text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-cyan-300">
                         Smarter Investing. Quantified.
                     </h1>
                     <p className="max-w-3xl mx-auto text-lg md:text-xl text-gray-300 mb-12" style={{ animationDelay: '0.2s' }}>
@@ -72,7 +71,7 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigateToDashboard, onOpenAuthMo
                         Explore Dashboard
                     </button>
                 </div>
-                <div className="absolute bottom-10 z-10 animate-fade-in-up" style={{ animationDelay: '0.8s' }}>
+                <div className="absolute bottom-10 z-20 animate-fade-in-up" style={{ animationDelay: '0.8s' }}>
                     <a href="#features" className="text-gray-400 hover:text-white transition-colors">
                         <svg className="w-8 h-8 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
                     </a>

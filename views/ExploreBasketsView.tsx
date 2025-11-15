@@ -10,13 +10,12 @@ interface ExploreBasketCardProps {
     positivePeriods: string;
     winLoss: string;
     minInvest: string;
-    fee: { original: string; discounted: string; discount: string; };
     tags: string[];
     onNavigate: () => void;
     isInvested: boolean;
 }
 
-const ExploreBasketCard: React.FC<ExploreBasketCardProps> = ({ name, creator, description, returns, positivePeriods, winLoss, minInvest, fee, tags, onNavigate, isInvested }) => (
+const ExploreBasketCard: React.FC<ExploreBasketCardProps> = ({ name, creator, description, returns, positivePeriods, winLoss, minInvest, tags, onNavigate, isInvested }) => (
     <GlassPane className="flex flex-col justify-between">
         <div className="p-6">
             <div className="flex items-start justify-between">
@@ -51,13 +50,6 @@ const ExploreBasketCard: React.FC<ExploreBasketCardProps> = ({ name, creator, de
                     <p className="text-lg font-bold text-gray-900 dark:text-white font-mono">{minInvest}</p>
                 </div>
             </div>
-            <div className="mt-4 p-3 bg-stone-100 dark:bg-gray-900/50 rounded-lg flex justify-between items-center border border-stone-200 dark:border-cyan-400/30">
-                <div>
-                    <span className="text-xs text-gray-500 dark:text-gray-400">6 MONTH FEE</span>
-                    <p className="font-bold text-gray-900 dark:text-white"><span className="line-through text-gray-400">{fee.original}</span> {fee.discounted}</p>
-                </div>
-                <span className="px-3 py-1 text-sm font-bold text-green-700 dark:text-green-300 bg-green-200 dark:bg-green-900/50 rounded-full border border-green-300 dark:border-green-600">{fee.discount}% OFF</span>
-            </div>
         </div>
         <div className="bg-stone-100 dark:bg-black/30 p-4 flex justify-between items-center border-t border-stone-200 dark:border-cyan-400/20">
             <div className="flex items-center space-x-2">
@@ -69,7 +61,7 @@ const ExploreBasketCard: React.FC<ExploreBasketCardProps> = ({ name, creator, de
                 onClick={onNavigate} 
                 className={`${isInvested ? 'bg-stone-200 dark:bg-gray-700 hover:bg-stone-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200' : 'bg-cyan-600 hover:bg-cyan-500 text-black shadow-cyan-600/20'} font-semibold py-2 px-4 rounded-lg transition-colors shadow-md`}
             >
-                {isInvested ? 'View Details' : 'Invest'}
+                {isInvested ? 'View Details' : 'Bookmark'}
             </button>
         </div>
     </GlassPane>
@@ -81,7 +73,6 @@ const exploreBasketsData = [
         creator: 'QuantCrate AI',
         description: "A momentum-focused basket targeting pharmaceutical stocks with strong recent performance, including new 52-week highs.",
         returns: '35.1%', positivePeriods: '3/3 Mths', winLoss: '18/4', minInvest: '₹1,00,000',
-        fee: { original: '₹12,000', discounted: '₹7,200', discount: '40' },
         tags: ['PREMIUM', 'Momentum'],
     },
     {
@@ -89,7 +80,6 @@ const exploreBasketsData = [
         creator: 'QuantCrate AI',
         description: "Captures key players in the Electric Vehicle space, balancing long-term trends with recent market volatility.",
         returns: '42.0%', positivePeriods: '2/3 Mths', winLoss: '12/9', minInvest: '₹1,50,000',
-        fee: { original: '₹12,000', discounted: '₹7,200', discount: '40' },
         tags: ['PREMIUM', 'Thematic'],
     },
     {
@@ -97,7 +87,6 @@ const exploreBasketsData = [
         creator: 'QuantCrate AI',
         description: "This contrarian strategy identifies fundamentally sound stocks that are technically oversold and poised for a potential bounce.",
         returns: '-5.8%', positivePeriods: '1/3 Mths', winLoss: '6/15', minInvest: '₹30,000',
-        fee: { original: '₹8,000', discounted: '₹4,800', discount: '40' },
         tags: ['PREMIUM', 'Value'],
     },
      {
@@ -105,7 +94,6 @@ const exploreBasketsData = [
         creator: 'QuantCrate AI',
         description: "Stocks in the technology sector showing strong upward price trends and positive momentum signals.",
         returns: '28.5%', positivePeriods: '3/3 Mths', winLoss: '22/3', minInvest: '₹50,000',
-        fee: { original: '₹10,000', discounted: '₹6,000', discount: '40' },
         tags: ['PREMIUM', 'Momentum'],
     }
 ];

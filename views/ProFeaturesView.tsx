@@ -109,6 +109,48 @@ const ProFeaturesView: React.FC = () => {
                         </p>
                     </GlassPane>
                 </FeatureSection>
+                
+                <FeatureSection
+                    className="animate-on-scroll delay-1"
+                    title="Advanced Backtesting Engine"
+                    description="Don't just invest, stress-test. Our powerful backtesting engine lets you see how your custom baskets or edited strategies would have performed through different market conditions, giving you data-backed confidence."
+                    icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-cyan-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /><path strokeLinecap="round" strokeLinejoin="round" d="M3 10H2m2-4H2m4-2V2m4 2V2" /></svg>}
+                    imageSide="left"
+                >
+                    <GlassPane className="p-4 h-56 flex items-center justify-center" interactiveGlow>
+                        <p className="text-center font-mono text-lg text-gray-500 dark:text-gray-400">
+                           [ Strategy ] &rarr; Run Backtest &rarr; [ Performance Report ]
+                        </p>
+                    </GlassPane>
+                </FeatureSection>
+
+                <FeatureSection
+                    className="animate-on-scroll delay-2"
+                    title="AI-Powered Stock Screener"
+                    description="Move beyond pre-made baskets and become the architect of your own strategy. Use our intuitive screener to filter the entire market based on the quantitative factors that matter to you—from momentum to value to quality."
+                    icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-cyan-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>}
+                    imageSide="right"
+                >
+                    <GlassPane className="p-4 h-56 flex items-center justify-center" interactiveGlow>
+                        <p className="text-center font-mono text-lg text-gray-500 dark:text-gray-400">
+                           FILTER: Momentum &gt; 70 AND ROE &gt; 15%
+                        </p>
+                    </GlassPane>
+                </FeatureSection>
+
+                <FeatureSection
+                    className="animate-on-scroll delay-3"
+                    title="Exclusive Research & Insights"
+                    description="Get an edge with our members-only content. Pro users receive access to our weekly quant reports, deep-dive articles on market trends, and exclusive commentary on basket performance and rebalancing decisions."
+                    icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-cyan-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>}
+                    imageSide="left"
+                >
+                     <GlassPane className="p-4 h-56 flex items-center justify-center" interactiveGlow>
+                         <p className="text-center font-mono text-lg text-gray-500 dark:text-gray-400">
+                           [ Weekly Quant Report ]
+                        </p>
+                    </GlassPane>
+                </FeatureSection>
             </main>
         </div>
     );
