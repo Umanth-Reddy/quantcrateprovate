@@ -62,10 +62,10 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigateToDashboard, onOpenAuthMo
                 <div className="absolute inset-0 bg-black/30 z-0"></div>
                 
                 <div className="z-10 animate-fade-in-up">
-                    <h1 className="text-5xl md:text-7xl font-lora italic font-bold tracking-tight mb-6 text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-cyan-300">
+                    <h1 className="text-5xl md:text-7xl font-lora italic font-bold tracking-tight mb-12 text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-cyan-300">
                         Smarter Investing. Quantified.
                     </h1>
-                    <p className="max-w-3xl mx-auto text-lg md:text-xl text-gray-300 mb-8" style={{ animationDelay: '0.2s' }}>
+                    <p className="max-w-3xl mx-auto text-lg md:text-xl text-gray-300 mb-12" style={{ animationDelay: '0.2s' }}>
                         Discover high-potential stock baskets, curated by AI and backed by transparent, data-driven signals.
                     </p>
                     <button onClick={onNavigateToDashboard} className="bg-cyan-600 hover:bg-cyan-500 text-black font-bold py-3 px-8 rounded-lg transition-transform hover:scale-105 shadow-lg shadow-cyan-600/30" style={{ animationDelay: '0.4s' }}>

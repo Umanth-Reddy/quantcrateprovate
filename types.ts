@@ -1,3 +1,4 @@
+
 import type { ReactElement } from 'react';
 
 export type View = 'home' | 'dashboard' | 'explore' | 'basket-portfolio' | 'stock-terminal' | 'news' | 'portfolio' | 'how-it-works' | 'subscribe' | 'sectors' | 'pro-features';
@@ -110,7 +111,6 @@ export interface User {
 }
 
 export interface SectorPerformanceItem {
-    // FIX: Changed JSX.Element to ReactElement to resolve "Cannot find namespace 'JSX'" error.
     icon: ReactElement;
     sector: string;
     gainers: number;
