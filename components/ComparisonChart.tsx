@@ -4,6 +4,7 @@ import type { BasketStock } from '../types';
 
 interface ComparisonChartProps {
     stocks: BasketStock[];
+    onOpenDetailView: () => void;
 }
 
 const ChartLegendItem: React.FC<{ name: string; color: string }> = ({ name, color }) => (
@@ -13,13 +14,16 @@ const ChartLegendItem: React.FC<{ name: string; color: string }> = ({ name, colo
     </div>
 );
 
-const ComparisonChart: React.FC<ComparisonChartProps> = ({ stocks }) => {
+const ComparisonChart: React.FC<ComparisonChartProps> = ({ stocks, onOpenDetailView }) => {
     const colors = ['bg-cyan-500', 'bg-purple-500', 'bg-green-500', 'bg-yellow-500', 'bg-pink-500', 'bg-indigo-500'];
     const basketColor = 'bg-orange-500';
 
     return (
-        <GlassPane className="p-6">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Performance Comparison</h3>
+        <GlassPane hover className="p-6 cursor-pointer" onClick={onOpenDetailView}>
+            <div className="flex justify-between items-center">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Performance Comparison</h3>
+                <span className="text-sm text-cyan-600 dark:text-cyan-400 font-medium hidden group-hover:block">&rarr; View Details</span>
+            </div>
             <div className="h-64 bg-stone-50 dark:bg-black/30 rounded-lg border border-stone-200 dark:border-purple-400/20 flex items-center justify-center p-4">
                 {/* Static SVG Placeholder */}
                 <svg className="w-full h-full" viewBox="0 0 200 100" preserveAspectRatio="none">

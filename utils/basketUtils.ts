@@ -1,4 +1,3 @@
-
 import type { Basket, BasketStock, PortfolioBasket } from '../types';
 import { mockWhyData } from '../data/mockData';
 
@@ -39,12 +38,15 @@ export const generateNewBasket = (name: string, stockTickers: string[]): Basket 
 
 // Generates a new PortfolioBasket object for tracking a new investment
 export const generateNewPortfolioBasket = (name: string): PortfolioBasket => {
+    const today = new Date();
+    const investmentDate = today.toISOString().split('T')[0]; // YYYY-MM-DD
     return {
         name,
-        investedValue: '₹0',
-        currentValue: '₹0',
-        totalReturn: '+₹0',
+        investedValue: '₹25,000', // Default mock value
+        currentValue: '₹25,000',  // Default mock value
+        totalReturn: '+₹0.00',
         totalReturnPercent: '+0.00%',
-        isPositive: true
+        isPositive: true,
+        investmentDate,
     };
 };

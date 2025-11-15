@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 
 export type View = 'home' | 'dashboard' | 'explore' | 'basket-portfolio' | 'stock-terminal' | 'news' | 'portfolio' | 'how-it-works' | 'subscribe' | 'sectors';
-export type StockNavigationSource = 'dashboard' | 'basket' | 'portfolio';
+export type StockNavigationSource = 'dashboard' | 'basket' | 'portfolio' | 'stock-terminal';
 
 export interface Stock {
     ticker: string;
@@ -27,6 +27,8 @@ export interface Basket {
     summary: string;
     aiScore: AIScore;
     performanceMetrics: PerformanceMetrics;
+    isEdited?: boolean;
+    originalStocks?: BasketStock[];
 }
 
 export interface SubScore {
@@ -99,6 +101,7 @@ export interface PortfolioBasket {
     totalReturn: string;
     totalReturnPercent: string;
     isPositive: boolean;
+    investmentDate: string;
 }
 
 export interface User {

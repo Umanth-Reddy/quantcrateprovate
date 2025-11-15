@@ -505,6 +505,6 @@ export const mockWatchlistBasketsData: WatchlistBasket[] = [
 ];
 
 export const mockInvestedBasketsData: PortfolioBasket[] = [
-    { name: 'Tech Momentum', investedValue: '₹50,000', currentValue: '₹54,250', totalReturn: '+₹4,250', totalReturnPercent: '+8.50%', isPositive: true },
-    { name: 'Banking Breakouts', investedValue: '₹1,20,000', currentValue: '₹1,15,800', totalReturn: '-₹4,200', totalReturnPercent: '-3.50%', isPositive: false },
+    { name: 'Tech Momentum', investedValue: '₹50,000', currentValue: '₹54,250', totalReturn: '+₹4,250', totalReturnPercent: '+8.50%', isPositive: true, investmentDate: '2023-10-15' },
+    { name: 'Banking Breakouts', investedValue: '₹1,20,000', currentValue: '₹1,15,800', totalReturn: '-₹4,200', totalReturnPercent: '-3.50%', isPositive: false, investmentDate: '2023-09-01' },
 ];

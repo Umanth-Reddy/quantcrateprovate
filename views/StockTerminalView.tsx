@@ -1,7 +1,6 @@
-
 import React from 'react';
 import GlassPane from '../components/ui/GlassPane';
-import type { StockDetails } from '../types';
+import type { StockDetails, View } from '../types';
 import AIScoreDetails from '../components/AIScoreDetails';
 import FundamentalsTable from '../components/FundamentalsTable';
 
@@ -9,7 +8,7 @@ interface StockTerminalViewProps {
     ticker: string;
     details: StockDetails;
     onBack: () => void;
-    onNavigateToBasket: (basketName: string) => void;
+    onNavigateToBasket: (basketName: string, source: View) => void;
     onNavigateToStock: (ticker: string) => void;
     isWatchlisted: boolean;
     onToggleWatchlist: (ticker: string) => void;
@@ -54,7 +53,7 @@ const StockTerminalView: React.FC<StockTerminalViewProps> = ({ ticker, details, 
                          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">In Baskets</h3>
                         <div className="flex flex-wrap gap-3">
                             {details.inBaskets.map(basketName => (
-                                <button key={basketName} onClick={() => onNavigateToBasket(basketName)} className="bg-stone-200 dark:bg-gray-700/50 text-cyan-700 dark:text-cyan-300 text-sm font-medium px-3 py-1 rounded-full hover:bg-stone-300 dark:hover:bg-gray-700 transition-colors border border-stone-300 dark:border-purple-400/20">
+                                <button key={basketName} onClick={() => onNavigateToBasket(basketName, 'stock-terminal')} className="bg-stone-200 dark:bg-gray-700/50 text-cyan-700 dark:text-cyan-300 text-sm font-medium px-3 py-1 rounded-full hover:bg-stone-300 dark:hover:bg-gray-700 transition-colors border border-stone-300 dark:border-purple-400/20">
                                     {basketName}
                                 </button>
                             ))}

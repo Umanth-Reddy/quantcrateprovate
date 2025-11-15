@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import GlassPane from './ui/GlassPane';
 import Sparkline from './ui/Sparkline';
 import { mockWatchlistBasketsData, mockNewsData, mockWhyData } from '../data/mockData';
-import type { NewsItem } from '../types';
+import type { NewsItem, View } from '../types';
 
 interface SidebarProps {
     onNavigateToStock: (ticker: string) => void;
     onNavigateToPortfolio: (defaultTab: 'stocks' | 'baskets') => void;
-    onNavigateToBasket: (basketName: string) => void;
+    onNavigateToBasket: (basketName: string, source: View) => void;
     onOpenNewsModal: (newsItem: NewsItem) => void;
     watchlistedStocks: string[];
     watchlistedBaskets: string[];
@@ -38,7 +38,7 @@ const AISignalCard: React.FC<{ onNavigateToStock: (ticker: string) => void }> = 
 const Watchlist: React.FC<{ 
     onNavigateToStock: (ticker: string) => void; 
     onNavigateToPortfolio: (defaultTab: 'stocks' | 'baskets') => void; 
-    onNavigateToBasket: (basketName: string) => void;
+    onNavigateToBasket: (basketName: string, source: View) => void;
     watchlistedStocks: string[];
     watchlistedBaskets: string[];
 }> = ({ onNavigateToStock, onNavigateToPortfolio, onNavigateToBasket, watchlistedStocks, watchlistedBaskets }) => {
@@ -99,7 +99,7 @@ const Watchlist: React.FC<{
                     {watchlistedBaskets.length > 0 ? watchlistedBaskets.map(basketName => {
                         const basket = mockWatchlistBasketsData.find(b => b.name === basketName) || { name: basketName, stockCount: 0, changePercent: 'N/A', changePositive: true };
                         return (
-                         <div key={basket.name} onClick={() => onNavigateToBasket(basket.name)} className="flex justify-between items-center p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-gray-900/50 cursor-pointer">
+                         <div key={basket.name} onClick={() => onNavigateToBasket(basket.name, 'dashboard')} className="flex justify-between items-center p-2 rounded-lg hover:bg-stone-100 dark:hover:bg-gray-900/50 cursor-pointer">
                             <div>
                                 <span className="font-medium text-gray-900 dark:text-white">{basket.name}</span>
                                 <span className="block text-xs text-gray-500 dark:text-gray-400 font-mono">{basket.stockCount} Stocks</span>

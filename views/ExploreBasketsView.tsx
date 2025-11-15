@@ -1,6 +1,6 @@
-
 import React from 'react';
 import GlassPane from '../components/ui/GlassPane';
+import type { View } from '../types';
 
 interface ExploreBasketCardProps {
     name: string;
@@ -112,7 +112,7 @@ const exploreBasketsData = [
 
 
 interface ExploreBasketsViewProps {
-    onNavigateToBasket: (basketName: string) => void;
+    onNavigateToBasket: (basketName: string, source: View) => void;
     investedBasketNames: string[];
 }
 
@@ -136,7 +136,7 @@ const ExploreBasketsView: React.FC<ExploreBasketsViewProps> = ({ onNavigateToBas
                      <ExploreBasketCard 
                         key={basket.name}
                         {...basket}
-                        onNavigate={() => onNavigateToBasket(basket.name)}
+                        onNavigate={() => onNavigateToBasket(basket.name, 'explore')}
                         isInvested={investedBasketNames.includes(basket.name)}
                      />
                 ))}
