@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react';
 
-export type View = 'home' | 'dashboard' | 'explore' | 'basket-portfolio' | 'stock-terminal' | 'news' | 'portfolio' | 'how-it-works' | 'subscribe' | 'sectors';
+export type View = 'home' | 'dashboard' | 'explore' | 'basket-portfolio' | 'stock-terminal' | 'news' | 'portfolio' | 'how-it-works' | 'subscribe' | 'sectors' | 'pro-features';
 export type StockNavigationSource = 'dashboard' | 'basket' | 'portfolio' | 'stock-terminal';
 
 export interface Stock {

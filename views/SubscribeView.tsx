@@ -50,7 +50,9 @@ const SubscribeView: React.FC<SubscribeViewProps> = ({ onSubscribe }) => {
                     <PlanFeature text="Explore Curated Baskets" free={false} pro={true} />
                     <PlanFeature text="AI-Powered Stock Analysis ('Why' Score)" free={false} pro={true} />
                     <PlanFeature text="AI Signal of the Day" free={false} pro={true} />
-                    <PlanFeature text="Create & Manage Custom Baskets" free={false} pro={true} />
+                    <PlanFeature text="Create, Edit & Manage Custom Baskets" free={false} pro={true} />
+                    <PlanFeature text="Detailed Performance Analytics" free={false} pro={true} />
+                    <PlanFeature text="Track Investment & Edit History" free={false} pro={true} />
                     <PlanFeature text="Advanced Backtesting Tools" free={false} pro={true} />
                     <PlanFeature text="Priority Support" free={false} pro={true} />
 

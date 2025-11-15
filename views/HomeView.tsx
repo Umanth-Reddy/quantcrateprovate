@@ -62,7 +62,7 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigateToDashboard, onOpenAuthMo
                 <div className="absolute inset-0 bg-black/30 z-0"></div>
                 
                 <div className="z-10 animate-fade-in-up">
-                    <h1 className="text-5xl md:text-7xl font-lora italic font-bold tracking-tight mb-4 text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-cyan-300">
+                    <h1 className="text-5xl md:text-7xl font-lora italic font-bold tracking-tight mb-6 text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-cyan-300">
                         Smarter Investing. Quantified.
                     </h1>
                     <p className="max-w-3xl mx-auto text-lg md:text-xl text-gray-300 mb-8" style={{ animationDelay: '0.2s' }}>
@@ -144,11 +144,6 @@ const HomeView: React.FC<HomeViewProps> = ({ onNavigateToDashboard, onOpenAuthMo
                     </button>
                  </div>
             </section>
-
-             {/* Footer */}
-            <footer className="py-6 px-4 sm:px-6 lg:px-8 border-t border-cyan-400/20 text-center">
-                <p className="text-sm text-gray-500 dark:text-gray-400">&copy; {new Date().getFullYear()} QuantCrate. All Rights Reserved.</p>
-            </footer>
 
         </div>
     );

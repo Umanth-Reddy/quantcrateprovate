@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import GlassPane from '../components/ui/GlassPane';
 import { mockWatchlistBasketsData, mockWhyData } from '../data/mockData';
@@ -18,8 +19,13 @@ const InvestedBasketCard: React.FC<{ basket: PortfolioBasket, onClick: () => voi
     const glowClass = basket.isPositive ? '!shadow-glow-green border-green-500/50' : '!shadow-glow-red border-red-500/50';
     return (
         <GlassPane hover className={`p-4 cursor-pointer ${glowClass}`} onClick={onClick}>
-            <h3 className="font-semibold text-gray-900 dark:text-white text-lg">{basket.name}</h3>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-2 font-mono text-sm">
+            <div className="flex justify-between items-start mb-2">
+                <h3 className="font-semibold text-gray-900 dark:text-white text-lg">{basket.name}</h3>
+                <span className="text-xs text-gray-400 dark:text-gray-500 font-mono self-center">
+                    Since {basket.investmentDate}
+                </span>
+            </div>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-2 font-mono text-sm">
                 <div className="text-gray-500 dark:text-gray-400">Invested</div>
                 <div className="text-right text-gray-900 dark:text-white">{basket.investedValue}</div>
                 <div className="text-gray-500 dark:text-gray-400">Current</div>

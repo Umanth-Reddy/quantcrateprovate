@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import GlassPane from '../components/ui/GlassPane';
 import AIScoreDetails from '../components/AIScoreDetails';
@@ -140,7 +141,14 @@ const BasketPortfolioView: React.FC<BasketPortfolioViewProps> = ({ basketName, b
             <button onClick={onBack} className="text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300 text-sm font-medium mb-4">&larr; Back</button>
             <div className="flex justify-between items-start mb-6">
                 <div className="flex items-center space-x-4">
-                    <h1 className="text-4xl font-bold text-gray-900 dark:text-white">{basketName}</h1>
+                    <div>
+                        <h1 className="text-4xl font-bold text-gray-900 dark:text-white">{basketName}</h1>
+                        {isInvested && investmentDate && (
+                            <p className="text-sm text-gray-500 dark:text-gray-400 font-mono mt-1">
+                                Invested on: {new Date(investmentDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                            </p>
+                        )}
+                    </div>
                     <WatchlistButton isWatchlisted={isWatchlisted} onClick={() => onToggleWatchlist(basketName)} />
                     {isInvested && (
                         <button onClick={onOpenEditModal} className="text-gray-400 dark:text-gray-500 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors" aria-label="Edit basket">

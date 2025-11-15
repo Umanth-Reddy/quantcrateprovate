@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import Header from './components/Header';
 import MarketTicker from './components/MarketTicker';
@@ -10,6 +11,7 @@ import NewsView from './views/NewsView';
 import PortfolioView from './views/PortfolioView';
 import HowItWorksView from './views/HowItWorksView';
 import SubscribeView from './views/SubscribeView';
+import ProFeaturesView from './views/ProFeaturesView';
 import SectorsView from './views/SectorsView';
 import NewsModal from './components/NewsModal';
 import AuthModal from './components/AuthModal';
@@ -17,6 +19,7 @@ import SubscriptionModal from './components/SubscriptionModal';
 import SubscriptionCodeModal from './components/SubscriptionCodeModal';
 import CreateEditBasketModal from './components/CreateEditBasketModal';
 import PerformanceDetailModal from './components/PerformanceDetailModal';
+import Footer from './components/Footer';
 import type { View, Basket, StockDetails, NewsItem, StockNavigationSource, User, PortfolioBasket } from './types';
 import { mockBasketData, mockWhyData, mockInvestedBasketsData } from './data/mockData';
 import { generateNewBasket, generateNewPortfolioBasket } from './utils/basketUtils';
@@ -32,6 +35,7 @@ const App: React.FC = () => {
     const [portfolioWatchlistTab, setPortfolioWatchlistTab] = useState<'stocks' | 'baskets'>('baskets');
     const [authModal, setAuthModal] = useState<{isOpen: boolean; mode: 'login' | 'signup'}>({isOpen: false, mode: 'login'});
     const [currentUser, setCurrentUser] = useState<User | null>(null);
+    const [isFooterExpanded, setIsFooterExpanded] = useState(false);
 
     // --- Modals State ---
     const [editModalState, setEditModalState] = useState<{isOpen: boolean; basketName?: string}>({ isOpen: false });
@@ -49,6 +53,12 @@ const App: React.FC = () => {
     // --- Watchlist State ---
     const [watchlistedStocks, setWatchlistedStocks] = useState<string[]>(['AAPL', 'TSLA']);
     const [watchlistedBaskets, setWatchlistedBaskets] = useState<string[]>(['Pharma Surge', 'Mean Reversion']);
+
+    const isProAccess = isSubscribed || currentUser?.role === 'admin';
+
+    const handleFooterToggle = useCallback(() => {
+        setIsFooterExpanded(prev => !prev);
+    }, []);
 
     const handleToggleStockWatchlist = (ticker: string) => {
         setWatchlistedStocks(prev => 
@@ -69,7 +79,7 @@ const App: React.FC = () => {
         if (archived) {
             setInvestments(prev => [...prev, archived]);
             setArchivedBaskets(prev => prev.filter(b => b.name !== basketName));
-        } else if (allBaskets[basketName]) {
+        } else {
             const newPortfolioBasket = generateNewPortfolioBasket(basketName);
             setInvestments(prev => [...prev, newPortfolioBasket]);
         }
@@ -123,8 +133,6 @@ const App: React.FC = () => {
         }
         setEditModalState({ isOpen: false });
     };
-
-    const isProAccess = isSubscribed || currentUser?.role === 'admin';
 
     useEffect(() => {
         const theme = localStorage.getItem('theme');
@@ -180,6 +188,14 @@ const App: React.FC = () => {
         }
     }, [isProAccess]);
 
+    const handleExploreDashboardClick = useCallback(() => {
+        if (currentUser) {
+            navigateToDashboard();
+        } else {
+            handleOpenAuthModal('login');
+        }
+    }, [currentUser, navigateToDashboard, handleOpenAuthModal]);
+
     const navigateToPortfolio = useCallback(() => {
         setView('portfolio');
         setSelectedBasketName(null);
@@ -204,12 +220,19 @@ const App: React.FC = () => {
         setSelectedTicker(null);
     }, []);
 
-    const navigateToSubscribe = useCallback(() => {
-        setView('subscribe');
+    const navigateToSubscribeOrPro = useCallback(() => {
+        if (!currentUser) {
+            handleOpenAuthModal('login');
+            return;
+        }
+        
+        setView(isProAccess ? 'pro-features' : 'subscribe');
+
         setSubscriptionModalOpen(false);
         setSelectedBasketName(null);
         setSelectedTicker(null);
-    }, []);
+    }, [currentUser, isProAccess, handleOpenAuthModal]);
+
 
     const handleSubscribe = useCallback(() => {
         setSubscriptionCodeModalOpen(true);
@@ -246,6 +269,8 @@ const App: React.FC = () => {
     const protectedNavigateToStock = (ticker: string, source: StockNavigationSource) => handleProtectedAction(() => navigateToStock(ticker, source));
 
     const handleBackFromBasket = useCallback(() => {
+        setSelectedTicker(null);
+        setSelectedBasketName(null);
         switch (basketNavigationSource) {
             case 'explore': navigateToExplore(); break;
             case 'portfolio': navigateToPortfolio(); break;
@@ -285,7 +310,7 @@ const App: React.FC = () => {
         const investedBasketNames = investments.map(b => b.name);
         switch (view) {
             case 'home':
-                return <HomeView onNavigateToDashboard={navigateToDashboard} onOpenAuthModal={handleOpenAuthModal} />;
+                return <HomeView onNavigateToDashboard={handleExploreDashboardClick} onOpenAuthModal={handleOpenAuthModal} />;
             case 'dashboard':
                 return <DashboardView onNavigateToBasket={(name) => protectedNavigateToBasket(name, 'dashboard')} onNavigateToStock={(ticker) => protectedNavigateToStock(ticker, 'dashboard')} onOpenNewsModal={openNewsModal} onNavigateToPortfolio={navigateToPortfolio} watchlistedBaskets={watchlistedBaskets} watchlistedStocks={watchlistedStocks} onNavigateToSectors={navigateToSectors} />;
             case 'explore':
@@ -307,6 +332,8 @@ const App: React.FC = () => {
                 return <HowItWorksView />;
             case 'subscribe':
                 return <SubscribeView onSubscribe={handleSubscribe} />;
+            case 'pro-features':
+                return <ProFeaturesView />;
             case 'sectors':
                 return <SectorsView onBack={navigateToDashboard} />;
             case 'basket-portfolio':
@@ -335,25 +362,31 @@ const App: React.FC = () => {
                         details={stockDetails}
                         onBack={handleBackFromTerminal}
                         onNavigateToBasket={(name) => protectedNavigateToBasket(name, 'stock-terminal')}
-                        onNavigateToStock={(ticker) => protectedNavigateToStock(ticker, navigationSource)}
+                        onNavigateToStock={(ticker) => protectedNavigateToStock(ticker, 'basket')}
                         isWatchlisted={watchlistedStocks.includes(selectedTicker)}
                         onToggleWatchlist={handleToggleStockWatchlist}
                     />
                 ) : null;
             default:
-                return <HomeView onNavigateToDashboard={navigateToDashboard} onOpenAuthModal={handleOpenAuthModal} />;
+                return <HomeView onNavigateToDashboard={handleExploreDashboardClick} onOpenAuthModal={handleOpenAuthModal} />;
         }
     };
 
     return (
         <div className="flex flex-col min-h-screen w-screen font-sans">
-            <Header currentView={view} onNavigateToHome={navigateToHome} onNavigateToDashboard={navigateToDashboard} onNavigateToExplore={navigateToExplore} onNavigateToNews={navigateToNews} onNavigateToPortfolio={navigateToPortfolio} onNavigateToHowItWorks={navigateToHowItWorks} onNavigateToSubscribe={navigateToSubscribe} onOpenAuthModal={handleOpenAuthModal} currentUser={currentUser} onLogout={handleLogout} />
+            <Header currentView={view} onNavigateToHome={navigateToHome} onNavigateToDashboard={navigateToDashboard} onNavigateToExplore={navigateToExplore} onNavigateToNews={navigateToNews} onNavigateToPortfolio={navigateToPortfolio} onNavigateToHowItWorks={navigateToHowItWorks} onNavigateToSubscribeOrPro={navigateToSubscribeOrPro} onOpenAuthModal={handleOpenAuthModal} currentUser={currentUser} onLogout={handleLogout} isProAccess={isProAccess} />
             {view !== 'home' && currentUser && <MarketTicker />}
-            <main className="flex flex-1">
+            <main className={`flex flex-1 transition-all duration-500 ${isFooterExpanded ? 'pb-48' : 'pb-12'}`}>
                 <div key={view} className="flex-1 animate-main-content-fade-in w-full">
                     {renderView()}
                 </div>
             </main>
+            <Footer 
+                isExpanded={isFooterExpanded}
+                onToggle={handleFooterToggle}
+                onNavigateToHowItWorks={navigateToHowItWorks}
+                onNavigateToSubscribeOrPro={navigateToSubscribeOrPro}
+            />
             {selectedNews && (
                 <NewsModal newsItem={selectedNews} onClose={closeNewsModal} />
             )}
@@ -366,7 +399,7 @@ const App: React.FC = () => {
             <SubscriptionModal
                 isOpen={isSubscriptionModalOpen}
                 onClose={() => setSubscriptionModalOpen(false)}
-                onNavigateToSubscribe={navigateToSubscribe}
+                onNavigateToSubscribe={navigateToSubscribeOrPro}
             />
             <SubscriptionCodeModal
                 isOpen={isSubscriptionCodeModalOpen}

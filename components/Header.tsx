@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import type { View, User } from '../types';
 
@@ -10,10 +9,11 @@ interface HeaderProps {
     onNavigateToNews: () => void;
     onNavigateToPortfolio: () => void;
     onNavigateToHowItWorks: () => void;
-    onNavigateToSubscribe: () => void;
+    onNavigateToSubscribeOrPro: () => void;
     onOpenAuthModal: (mode: 'login' | 'signup') => void;
     currentUser: User | null;
     onLogout: () => void;
+    isProAccess: boolean;
 }
 
 const ThemeToggle: React.FC = () => {
@@ -50,7 +50,7 @@ const ThemeToggle: React.FC = () => {
     );
 };
 
-const Header: React.FC<HeaderProps> = ({ currentView, onNavigateToHome, onNavigateToDashboard, onNavigateToExplore, onNavigateToNews, onNavigateToPortfolio, onNavigateToHowItWorks, onNavigateToSubscribe, onOpenAuthModal, currentUser, onLogout }) => {
+const Header: React.FC<HeaderProps> = ({ currentView, onNavigateToHome, onNavigateToDashboard, onNavigateToExplore, onNavigateToNews, onNavigateToPortfolio, onNavigateToHowItWorks, onNavigateToSubscribeOrPro, onOpenAuthModal, currentUser, onLogout, isProAccess }) => {
     const navLinkClasses = "text-gray-300 hover:bg-gray-900/50 hover:text-cyan-300 px-3 py-2 rounded-md text-sm font-medium";
     const activeNavLinkClasses = "bg-cyan-600/30 text-cyan-100 border border-cyan-500/50 px-3 py-2 rounded-md text-sm font-medium";
     
@@ -96,8 +96,11 @@ const Header: React.FC<HeaderProps> = ({ currentView, onNavigateToHome, onNaviga
                 </div>
                 <div className="flex items-center space-x-4">
                     {currentUser && (
-                         <button onClick={() => onNavigateToSubscribe()} className={`${currentView === 'subscribe' ? activeNavLinkClasses : navLinkClasses} bg-cyan-600/20 border border-cyan-500/30`}>
-                            Subscribe
+                         <button 
+                             onClick={onNavigateToSubscribeOrPro} 
+                             className={`${(currentView === 'subscribe' || currentView === 'pro-features') ? activeNavLinkClasses : navLinkClasses} ${!isProAccess ? 'bg-cyan-600/20 border border-cyan-500/30' : ''}`}
+                         >
+                            {isProAccess ? 'Pro Features' : 'Subscribe'}
                         </button>
                     )}
 
